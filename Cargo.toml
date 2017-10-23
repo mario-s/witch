@@ -1,0 +1,8 @@
+[package]
+name = "piston"
+version = "0.0.1"
+authors = ["Mario Schroeder <spindizzy@outlook.com>"]
+
+[dependencies]
+piston_window = "0.70.0"
+find_folder = "0.3.0"
