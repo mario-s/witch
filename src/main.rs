@@ -28,7 +28,7 @@ impl Canvas {
         const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
         const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
         let viewport = args.viewport();
-        let mut cache = GlyphCache::new(assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
+        let mut cache = GlyphCache::new(self.assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
         self.gl.draw(viewport, |context, gl| {
             clear([1.0, 1.0, 1.0, 1.0], gl);
@@ -37,7 +37,7 @@ impl Canvas {
                       context.transform,
                       gl);
 
-            text(BLACK, 20, "Test", &mut cache, context.transform.trans(150.0, 80.0), gl);
+            text(BLACK, 30, &"Test", &mut cache, context.transform.trans(150.0, 80.0), gl);
         });
     }
 
@@ -46,13 +46,14 @@ impl Canvas {
 
     }
 
+    fn assets(&mut self, path: &str) -> PathBuf {
+        let assets = find_folder::Search::ParentsThenKids(3, 3)
+            .for_folder("assets").unwrap();
+        return assets.join(path);
+    }
+
 }
 
-fn assets(path: &str) -> PathBuf {
-    let assets = find_folder::Search::ParentsThenKids(3, 3)
-        .for_folder("assets").unwrap();
-    return assets.join(path);
-}
 
 fn main() {
     let opengl = OpenGL::V3_2;
