@@ -22,7 +22,7 @@ impl Canvas {
         const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
         const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
         let viewport = args.viewport();
-        let mut cache = GlyphCache::new(assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
+        let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
         self.gl.draw(viewport, |context, gl| {
             clear([1.0, 1.0, 1.0, 1.0], gl);
