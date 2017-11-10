@@ -15,7 +15,15 @@ impl Assets {
 
     pub fn texture(name: &str) -> Texture {
         let path = "layers/".to_string() + name;
-        let dir: &str = &path;
-        return Texture::from_path(Assets::assets(dir), &TextureSettings::new()).unwrap();
+        return Assets::from_path(&path);
+    }
+
+    pub fn icon(name: &str) -> Texture {
+        let path = "icons/".to_string() + name;
+        return Assets::from_path(&path);
+    }
+
+    fn from_path(path: &str) -> Texture {
+        return Texture::from_path(Assets::assets(path), &TextureSettings::new()).unwrap();
     }
 }
