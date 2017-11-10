@@ -19,7 +19,7 @@ fn main() {
     let opengl = OpenGL::V3_2;
 
     let mut window: Window = WindowSettings::new(
-        "Demo",
+        "super.mario",
         [640, 480]
     )
         .opengl(opengl)
