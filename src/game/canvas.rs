@@ -7,16 +7,33 @@ use sprite::*;
 use std::rc::Rc;
 use piston::window::*;
 use piston::input::*;
-use opengl_graphics::{ GlGraphics, OpenGL, GlyphCache, TextureSettings};
+use opengl_graphics::{ GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
-
-
 use game::assets::Assets;
+
+
+fn background() -> [Texture; 4] {
+    return [
+        Assets::texture("parallax-forest-back-trees.png"),
+        Assets::texture("parallax-forest-middle-trees.png"),
+        Assets::texture("parallax-forest-lights.png"),
+        Assets::texture("parallax-forest-front-trees.png"),
+    ]
+}
+
+fn witch() -> Sprite<Texture> {
+    let witch = Rc::new(Assets::icon("witch-icon.png"));
+    let mut sprite = Sprite::from_texture(witch.clone());
+    sprite.set_position(50.0, 80.0);
+    return sprite;
+}
+
 
 pub struct Canvas {
     gl: GlGraphics,
     translation: f64
 }
+
 
 impl Canvas {
     const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -34,28 +51,18 @@ impl Canvas {
         let viewport = args.viewport();
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
-        let back_texture = Assets::texture("parallax-forest-back-trees.png");
-        let middle_texture = Assets::texture("parallax-forest-middle-trees.png");
-        let front_texture = Assets::texture("parallax-forest-front-trees.png");
-        let light_texture = Assets::texture("parallax-forest-lights.png");
-
-
-        let witch = Rc::new(Assets::icon("witch-icon.png"));
-        let mut sprite = Sprite::from_texture(witch.clone());
-        sprite.set_position(50.0, 80.0);
-
+        let background = background();
         let mut scene = Scene::new();
-        scene.add_child(sprite);
+        scene.add_child(witch());
 
         let translation = self.translation;
 
         self.gl.draw(viewport, |context, gl| {
             clear([1.0, 1.0, 1.0, 1.0], gl);
 
-            image(&back_texture, context.transform, gl);
-            image(&middle_texture, context.transform, gl);
-            image(&light_texture, context.transform, gl);
-            image(&front_texture, context.transform, gl);
+            for texture in background.into_iter() {
+                image(texture, context.transform, gl);
+            }
 
             let trans = context.transform.trans(translation, 0.0);
             scene.draw(trans, gl);
@@ -68,5 +75,4 @@ impl Canvas {
         // update code here
         self.translation += 1.0;
     }
-
 }
