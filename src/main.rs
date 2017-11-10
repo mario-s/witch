@@ -4,26 +4,22 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 
-
 use piston::window::*;
 use piston::event_loop::*;
 use piston::input::*;
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::OpenGL;
 
-
 mod game;
-
 
 fn main() {
     let opengl = OpenGL::V3_2;
-    let size: Size = Size{width: 272, height: 160};
-
     let mut window: Window = WindowSettings::new(
         "super.mario",
-        size
+        [272, 160]
     )
         .opengl(opengl)
+        .resizable(false)
         .exit_on_esc(true)
         .build()
         .unwrap();

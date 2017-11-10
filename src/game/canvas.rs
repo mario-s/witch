@@ -24,7 +24,6 @@ impl Canvas {
         const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
         let viewport = args.viewport();
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
-
         let back_texture = Assets::texture("parallax-forest-back-trees.png");
         let middle_texture = Assets::texture("parallax-forest-middle-trees.png");
         let front_texture = Assets::texture("parallax-forest-front-trees.png");
@@ -43,7 +42,7 @@ impl Canvas {
                       context.transform,
                       gl);
 
-            text(BLACK, 30, &"Blair Witch", &mut cache, context.transform.trans(120.0, 80.0), gl);
+            text(BLACK, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
         });
     }
 
