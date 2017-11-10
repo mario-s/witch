@@ -15,6 +15,7 @@ use game::assets::Assets;
 
 pub struct Canvas {
     gl: GlGraphics,
+    translation: f64
 }
 
 impl Canvas {
@@ -22,7 +23,10 @@ impl Canvas {
     const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
 
     pub fn new(opengl: OpenGL) -> Canvas {
-        Canvas{gl: GlGraphics::new(opengl)}
+        Canvas{
+            gl: GlGraphics::new(opengl),
+            translation: 0.0
+        }
     }
 
     #[allow(unused_must_use)]
@@ -43,6 +47,8 @@ impl Canvas {
         let mut scene = Scene::new();
         scene.add_child(sprite);
 
+        let translation = self.translation;
+
         self.gl.draw(viewport, |context, gl| {
             clear([1.0, 1.0, 1.0, 1.0], gl);
 
@@ -51,7 +57,8 @@ impl Canvas {
             image(&light_texture, context.transform, gl);
             image(&front_texture, context.transform, gl);
 
-            scene.draw(context.transform, gl);
+            let trans = context.transform.trans(translation, 0.0);
+            scene.draw(trans, gl);
 
             text(Canvas::BLACK, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
         });
@@ -59,7 +66,7 @@ impl Canvas {
 
     pub fn update(&mut self, args: UpdateArgs) {
         // update code here
-
+        self.translation += 1.0;
     }
 
 }
