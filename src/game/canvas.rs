@@ -2,13 +2,16 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
+extern crate ai_behavior;
+
 
 use sprite::*;
 use std::rc::Rc;
 use piston::window::*;
 use piston::input::*;
-use opengl_graphics::{ GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
+use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
+
 use game::assets::Assets;
 
 struct Env {
@@ -18,7 +21,7 @@ struct Env {
 impl Env {
     fn new() -> Env {
         Env {
-            backgrounds:  [
+            backgrounds: [
                 Assets::texture("parallax-forest-back-trees.png"),
                 Assets::texture("parallax-forest-middle-trees.png"),
                 Assets::texture("parallax-forest-lights.png"),
@@ -36,31 +39,32 @@ impl Env {
 }
 
 
+
 pub struct Canvas {
     gl: GlGraphics,
     env: Env,
     translation: f64,
-    backgroundTranslations: [f64; 4],
+    background_translations: [f64; 4],
 }
 
 
 impl Canvas {
     const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
-    const RED:   [f32; 4] = [1.0, 0.0, 0.0, 1.0];
+    const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
     const ZERO: f64 = 0.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
-        Canvas{
+        Canvas {
             gl: GlGraphics::new(opengl),
             env: Env::new(),
             translation: 0.0,
-            backgroundTranslations: [0.0,0.0,0.0,0.0],
+            background_translations: [0.0, 0.0, 0.0, 0.0],
         }
     }
 
     #[allow(unused_must_use)]
-    pub fn render(&mut self, args: RenderArgs) {
-        let viewport = args.viewport();
+    pub fn render(&mut self, r_arg: RenderArgs) {
+        let viewport = r_arg.viewport();
 
         let imgs = &self.env.backgrounds;
 
@@ -71,7 +75,7 @@ impl Canvas {
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
         let translation = self.translation;
-        let translations = self.backgroundTranslations;
+        let translations = self.background_translations;
         let mut index = 0;
 
         self.gl.draw(viewport, |context, gl| {
@@ -92,20 +96,23 @@ impl Canvas {
         });
     }
 
+
     pub fn update(&mut self, args: UpdateArgs) {
+        let max: f64 = self.env.backgrounds[0].get_width() as f64;
         self.translation += 0.5;
-
-        self.backgroundTranslations[0] -= 0.01;
-        self.backgroundTranslations[1] -= 0.02;
-        self.backgroundTranslations[3] -= 0.04;
-
-        let min: f64 = -1.0 * self.env.backgrounds[0].get_width() as f64;
-        for i in 0..4 {
-            if self.backgroundTranslations[i] < min {
-                self.backgroundTranslations[i] = Canvas::ZERO;
-            }
+        if self.translation > max {
+            self.translation = Canvas::ZERO;
         }
 
-    }
+        self.background_translations[0] -= 0.01;
+        self.background_translations[1] -= 0.03;
+        self.background_translations[3] -= 0.1;
 
+        let min: f64 = -1.0 * max;
+        for i in 0..4 {
+            if self.background_translations[i] < min {
+                self.background_translations[i] = Canvas::ZERO;
+            }
+        }
+    }
 }
