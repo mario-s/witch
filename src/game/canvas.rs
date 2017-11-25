@@ -14,14 +14,14 @@ use graphics::*;
 
 use game::assets::Assets;
 
-struct Env {
-    backgrounds: [Texture; 4],
+struct Background {
+    levels: [Texture; 4],
 }
 
-impl Env {
-    fn new() -> Env {
-        Env {
-            backgrounds: [
+impl Background {
+    fn new() -> Background {
+        Background {
+            levels: [
                 Assets::texture("parallax-forest-back-trees.png"),
                 Assets::texture("parallax-forest-middle-trees.png"),
                 Assets::texture("parallax-forest-lights.png"),
@@ -29,23 +29,16 @@ impl Env {
             ]
         }
     }
-
-    fn witch() -> Sprite<Texture> {
-        let witch = Rc::new(Assets::icon("witch-icon.png"));
-        let mut sprite = Sprite::from_texture(witch.clone());
-        sprite.set_position(50.0, 80.0);
-        return sprite;
-    }
 }
 
 
 pub struct Canvas {
     gl: GlGraphics,
-    env: Env,
+    background: Background,
     translation: f64,
     background_translations: [f64; 4],
+    witch: Rc<Texture>
 }
-
 
 impl Canvas {
     const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -54,20 +47,27 @@ impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
             gl: GlGraphics::new(opengl),
-            env: Env::new(),
+            background: Background::new(),
             translation: 0.0,
             background_translations: [0.0, 0.0, 0.0, 0.0],
+            witch: Rc::new(Assets::icon("witch-icon.png")),
         }
+    }
+
+    fn witch(&mut self) -> Sprite<Texture> {
+        let mut sprite = Sprite::from_texture(self.witch.clone());
+        sprite.set_position(50.0, 80.0);
+        return sprite;
     }
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
         let viewport = r_arg.viewport();
 
-        let imgs = &self.env.backgrounds;
-
         let mut scene = Scene::new();
-        scene.add_child(Env::witch());
+        scene.add_child(self.witch());
+
+        let imgs = &self.background.levels;
 
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
@@ -95,7 +95,7 @@ impl Canvas {
 
 
     pub fn update(&mut self, args: UpdateArgs) {
-        let max: f64 = self.env.backgrounds[0].get_width() as f64;
+        let max: f64 = self.background.levels[0].get_width() as f64;
         self.translation += 0.5;
         if self.translation > max {
             self.translation = Canvas::ZERO;
