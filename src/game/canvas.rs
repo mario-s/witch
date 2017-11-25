@@ -49,7 +49,6 @@ pub struct Canvas {
 
 impl Canvas {
     const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
-    const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
     const ZERO: f64 = 0.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
@@ -67,9 +66,8 @@ impl Canvas {
 
         let imgs = &self.env.backgrounds;
 
-        let sprite = Env::witch();
         let mut scene = Scene::new();
-        scene.add_child(sprite);
+        scene.add_child(Env::witch());
 
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
