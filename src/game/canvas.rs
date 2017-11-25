@@ -39,7 +39,6 @@ impl Env {
 }
 
 
-
 pub struct Canvas {
     gl: GlGraphics,
     env: Env,
