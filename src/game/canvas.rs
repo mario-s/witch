@@ -16,6 +16,7 @@ use game::assets::Assets;
 
 struct Background {
     levels: [Texture; 4],
+    translations: [f64; 4],
 }
 
 impl Background {
@@ -26,7 +27,21 @@ impl Background {
                 Assets::texture("parallax-forest-middle-trees.png"),
                 Assets::texture("parallax-forest-lights.png"),
                 Assets::texture("parallax-forest-front-trees.png"),
-            ]
+            ],
+            translations: [0.0, 0.0, 0.0, 0.0],
+        }
+    }
+
+    fn animate(&mut self) {
+        self.translations[0] -= 0.01;
+        self.translations[1] -= 0.03;
+        self.translations[3] -= 0.1;
+
+        let min: f64 = -1.0 * self.levels[0].get_width() as f64;
+        for i in 0..4 {
+            if self.translations[i] < min {
+                self.translations[i] = 0.0;
+            }
         }
     }
 }
@@ -36,20 +51,17 @@ pub struct Canvas {
     gl: GlGraphics,
     background: Background,
     translation: f64,
-    background_translations: [f64; 4],
     witch: Rc<Texture>
 }
 
 impl Canvas {
     const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
-    const ZERO: f64 = 0.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
             gl: GlGraphics::new(opengl),
             background: Background::new(),
             translation: 0.0,
-            background_translations: [0.0, 0.0, 0.0, 0.0],
             witch: Rc::new(Assets::icon("witch-icon.png")),
         }
     }
@@ -72,7 +84,7 @@ impl Canvas {
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
         let translation = self.translation;
-        let translations = self.background_translations;
+        let translations = self.background.translations;
         let mut index = 0;
 
         self.gl.draw(viewport, |context, gl| {
@@ -98,18 +110,9 @@ impl Canvas {
         let max: f64 = self.background.levels[0].get_width() as f64;
         self.translation += 0.5;
         if self.translation > max {
-            self.translation = Canvas::ZERO;
+            self.translation = 0.0;
         }
 
-        self.background_translations[0] -= 0.01;
-        self.background_translations[1] -= 0.03;
-        self.background_translations[3] -= 0.1;
-
-        let min: f64 = -1.0 * max;
-        for i in 0..4 {
-            if self.background_translations[i] < min {
-                self.background_translations[i] = Canvas::ZERO;
-            }
-        }
+        self.background.animate();
     }
 }
