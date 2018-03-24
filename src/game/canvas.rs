@@ -7,7 +7,6 @@ extern crate ai_behavior;
 
 use sprite::*;
 use std::rc::Rc;
-use piston::window::*;
 use piston::input::*;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
@@ -106,7 +105,7 @@ impl Canvas {
     }
 
 
-    pub fn update(&mut self, args: UpdateArgs) {
+    pub fn update(&mut self, _args: UpdateArgs) {
         let max: f64 = self.background.levels[0].get_width() as f64;
         self.translation += 0.5;
         if self.translation > max {
@@ -114,5 +113,23 @@ impl Canvas {
         }
 
         self.background.animate();
+    }
+
+    pub fn input(&mut self, b: Button) {
+        match b {
+            Button::Keyboard(Key::Up) => {
+                println!("up")
+            }
+            Button::Keyboard(Key::Down) => {
+                println!("down")
+            }
+            Button::Keyboard(Key::Left) => {
+                println!("left")
+            }
+            Button::Keyboard(Key::Right) => {
+                println!("right")
+            }
+            _ => ()
+        }
     }
 }

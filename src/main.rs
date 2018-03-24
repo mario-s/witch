@@ -30,11 +30,15 @@ fn main() {
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
         if let Some(r) = e.render_args() {
-            canvas.render(r)
+            canvas.render(r);
         }
 
         if let Some(u) = e.update_args() {
             canvas.update(u);
+        }
+
+        if let Some(p) = e.press_args() {
+            canvas.input(p);
         }
     }
 }
