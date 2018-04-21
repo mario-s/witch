@@ -49,18 +49,21 @@ impl Background {
 pub struct Canvas {
     gl: GlGraphics,
     background: Background,
-    translation: f64,
+    horizontal: f64,
+    vertical: f64,
     witch: Rc<Texture>
 }
 
 impl Canvas {
     const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+    const W_SPEED: f64 = 2.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
             gl: GlGraphics::new(opengl),
             background: Background::new(),
-            translation: 0.0,
+            horizontal: 0.0,
+            vertical: 0.0,
             witch: Rc::new(Assets::icon("witch-icon.png")),
         }
     }
@@ -82,7 +85,8 @@ impl Canvas {
 
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
-        let translation = self.translation;
+        let horizontal = self.horizontal;
+        let vertical = self.vertical;    
         let translations = self.background.translations;
         let mut index = 0;
 
@@ -97,7 +101,7 @@ impl Canvas {
                 index += 1;
             }
 
-            let trans = context.transform.trans(translation, 0.0);
+            let trans = context.transform.trans(horizontal, vertical);
             scene.draw(trans, gl);
 
             text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
@@ -111,10 +115,10 @@ impl Canvas {
     pub fn input(&mut self, b: Button) {
         match b {
             Button::Keyboard(Key::Up) => {
-                println!("up")
+                self.move_up()
             }
             Button::Keyboard(Key::Down) => {
-                println!("down")
+                self.move_down()
             }
             Button::Keyboard(Key::Left) => {
                 self.move_left()
@@ -127,15 +131,28 @@ impl Canvas {
     }
 
     fn move_left(&mut self) {
-        if self.translation > 0.0 {
-            self.translation -= 1.0;
+        if self.horizontal > 0.0 {
+            self.horizontal -= Canvas::W_SPEED;
         }
     }
 
     fn move_right(&mut self) {
         let max: f64 = self.background.levels[0].get_width() as f64;
-        if self.translation < max {
-            self.translation += 1.0;
+        if self.horizontal < max {
+            self.horizontal += Canvas::W_SPEED;
+        }
+    }
+
+    fn move_up(&mut self) {
+        if self.vertical > 0.0 {
+            self.vertical -= Canvas::W_SPEED;
+        }
+    }
+
+    fn move_down(&mut self) {
+        let max: f64 = self.background.levels[0].get_height() as f64;
+        if self.vertical < max {
+            self.vertical += Canvas::W_SPEED
         }
     }
 }
