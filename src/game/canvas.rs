@@ -54,7 +54,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+    const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
@@ -87,7 +87,7 @@ impl Canvas {
         let mut index = 0;
 
         self.gl.draw(viewport, |context, gl| {
-            clear([1.0, 1.0, 1.0, 1.0], gl);
+            clear(Canvas::WHITE, gl);
 
             for texture in imgs.into_iter() {
                 let translation = translations[index];
@@ -100,18 +100,11 @@ impl Canvas {
             let trans = context.transform.trans(translation, 0.0);
             scene.draw(trans, gl);
 
-            text(Canvas::BLACK, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
+            text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
         });
     }
 
-
     pub fn update(&mut self, _args: UpdateArgs) {
-        let max: f64 = self.background.levels[0].get_width() as f64;
-        self.translation += 0.5;
-        if self.translation > max {
-            self.translation = 0.0;
-        }
-
         self.background.animate();
     }
 
@@ -124,12 +117,25 @@ impl Canvas {
                 println!("down")
             }
             Button::Keyboard(Key::Left) => {
-                println!("left")
+                self.move_left()
             }
             Button::Keyboard(Key::Right) => {
-                println!("right")
+                self.move_right()
             }
             _ => ()
+        }
+    }
+
+    fn move_left(&mut self) {
+        if self.translation > 0.0 {
+            self.translation -= 1.0;
+        }
+    }
+
+    fn move_right(&mut self) {
+        let max: f64 = self.background.levels[0].get_width() as f64;
+        if self.translation < max {
+            self.translation += 1.0;
         }
     }
 }
