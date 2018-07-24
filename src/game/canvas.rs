@@ -32,9 +32,9 @@ impl Background {
     }
 
     fn animate(&mut self) {
-        self.translations[0] -= 0.01;
-        self.translations[1] -= 0.03;
-        self.translations[3] -= 0.1;
+        self.translations[0] -= 0.03;
+        self.translations[1] -= 0.06;
+        self.translations[3] -= 0.2;
 
         let min: f64 = -1.0 * self.levels[0].get_width() as f64;
         for i in 0..4 {
@@ -56,7 +56,10 @@ pub struct Canvas {
 
 impl Canvas {
     const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
-    const W_SPEED: f64 = 2.0;
+    const W_SPEED: f64 = 3.0;
+    //start position of the sprite
+    const W_X: f64 = 50.0;
+    const W_Y: f64 = 80.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
@@ -70,7 +73,7 @@ impl Canvas {
 
     fn witch(&mut self) -> Sprite<Texture> {
         let mut sprite = Sprite::from_texture(self.witch.clone());
-        sprite.set_position(50.0, 80.0);
+        sprite.set_position(Canvas::W_X, Canvas::W_Y);
         return sprite;
     }
 
@@ -113,6 +116,7 @@ impl Canvas {
     }
 
     pub fn input(&mut self, b: Button) {
+        println!("Pressed keyboard key '{:?}'", b);
         match b {
             Button::Keyboard(Key::Up) => {
                 self.move_up()
@@ -131,27 +135,26 @@ impl Canvas {
     }
 
     fn move_left(&mut self) {
-        if self.horizontal > 0.0 {
+        if self.horizontal > -10.0 {
             self.horizontal -= Canvas::W_SPEED;
         }
     }
 
     fn move_right(&mut self) {
-        let max: f64 = self.background.levels[0].get_width() as f64;
+        let max: f64 = self.background.levels[0].get_width() as f64 - Canvas::W_Y;
         if self.horizontal < max {
             self.horizontal += Canvas::W_SPEED;
         }
     }
 
     fn move_up(&mut self) {
-        if self.vertical > 0.0 {
+        if self.vertical > -Canvas::W_X {
             self.vertical -= Canvas::W_SPEED;
         }
     }
 
     fn move_down(&mut self) {
-        let max: f64 = self.background.levels[0].get_height() as f64;
-        if self.vertical < max {
+        if self.vertical < Canvas::W_X {
             self.vertical += Canvas::W_SPEED
         }
     }
