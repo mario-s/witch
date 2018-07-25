@@ -15,7 +15,7 @@ use opengl_graphics::OpenGL;
 mod game;
 
 fn main() {
-    let opengl = OpenGL::V3_1;
+    let opengl = OpenGL::V3_2;
     let mut window: Window = WindowSettings::new(
         "super.mario",
         [272, 160]

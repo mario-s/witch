@@ -105,7 +105,7 @@ impl Canvas {
             }
 
             let trans = context.transform.trans(horizontal, vertical);
-            scene.draw(trans, gl);
+            //scene.draw(trans, gl);
 
             text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
         });
