@@ -15,19 +15,19 @@ use opengl_graphics::OpenGL;
 mod game;
 
 fn main() {
-    let opengl = OpenGL::V3_2;
-    let mut window: Window = WindowSettings::new(
-        "super.mario",
-        [272, 160]
-    )
-        .opengl(opengl)
-        .resizable(false)
-        .exit_on_esc(true)
-        .build()
-        .unwrap();
+    let mut opengl = OpenGL::V3_1;
+    let result = build(opengl);
+    let mut window: Window = match result {
+        Ok(win) => win,
+        Err(_err) => {
+            opengl = OpenGL::V3_2;
+            build(opengl).unwrap()
+        }
+    };
 
     let mut canvas = game::Canvas::new(opengl);
     let mut events = Events::new(EventSettings::new());
+
     while let Some(e) = events.next(&mut window) {
         if let Some(r) = e.render_args() {
             canvas.render(r);
@@ -41,4 +41,10 @@ fn main() {
             canvas.input(p);
         }
     }
+}
+
+fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, String> {
+    return WindowSettings::new("super.mario",[272, 160])
+        .opengl(opengl).resizable(false).exit_on_esc(true)
+        .build();
 }
