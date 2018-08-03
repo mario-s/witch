@@ -4,7 +4,6 @@ extern crate piston;
 extern crate sprite;
 extern crate ai_behavior;
 
-
 use sprite::*;
 use std::rc::Rc;
 use piston::input::*;
@@ -93,21 +92,21 @@ impl Canvas {
         let translations = self.background.translations;
         let mut index = 0;
 
-        self.gl.draw(viewport, |context, gl| {
-            clear(Canvas::WHITE, gl);
+        self.gl.draw(viewport, |c, g| {
+            clear(Canvas::WHITE, g);
 
             for texture in imgs.into_iter() {
                 let translation = translations[index];
                 let width: f64 = texture.get_width() as f64;
-                image(texture, context.transform.trans(translation, 0.0), gl);
-                image(texture, context.transform.trans(width + translation, 0.0), gl);
+                image(texture, c.transform.trans(translation, 0.0), g);
+                image(texture, c.transform.trans(width + translation, 0.0), g);
                 index += 1;
             }
 
-            let trans = context.transform.trans(horizontal, vertical);
-            scene.draw(trans, gl);
+            let trans = c.transform.trans(horizontal, vertical);
+            scene.draw(trans, g);
 
-            text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, context.transform.trans(100.0, 90.0), gl);
+            text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
         });
     }
 
