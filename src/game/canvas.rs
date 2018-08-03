@@ -4,7 +4,6 @@ extern crate piston;
 extern crate sprite;
 extern crate ai_behavior;
 
-
 use sprite::*;
 use std::rc::Rc;
 use piston::input::*;
@@ -12,7 +11,6 @@ use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
 
 use game::assets::Assets;
-
 
 struct Background {
     levels: [Texture; 4],
