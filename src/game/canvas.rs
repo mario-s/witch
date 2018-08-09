@@ -50,7 +50,8 @@ pub struct Canvas {
     background: Background,
     horizontal: f64,
     vertical: f64,
-    witch: Rc<Texture>
+    witch: Rc<Texture>,
+    pause: bool
 }
 
 impl Canvas {
@@ -67,6 +68,7 @@ impl Canvas {
             horizontal: 0.0,
             vertical: 0.0,
             witch: Rc::new(Assets::icon("witch-icon.png")),
+            pause: true,
         }
     }
 
@@ -116,6 +118,23 @@ impl Canvas {
 
     pub fn input(&mut self, b: Button) {
         println!("Pressed keyboard key '{:?}'", b);
+        if !self.pause {
+            self.do_move(b);
+        }
+        
+        self.toggle(b);
+    }
+
+    fn toggle(&mut self,  b: Button) {
+        match b {
+            Button::Keyboard(Key::P) => {
+                self.pause = !self.pause;
+            }
+            _ => ()
+        }
+    }
+
+    fn do_move(&mut self, b: Button) {
         match b {
             Button::Keyboard(Key::Up) => {
                 self.move_up()
