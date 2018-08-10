@@ -56,7 +56,7 @@ pub struct Canvas {
 
 impl Canvas {
     const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
-    const W_SPEED: f64 = 3.0;
+    const W_SPEED: f64 = 4.0;
     //start position of the sprite
     const W_X: f64 = 50.0;
     const W_Y: f64 = 80.0;
@@ -92,6 +92,7 @@ impl Canvas {
         let horizontal = self.horizontal;
         let vertical = self.vertical;    
         let translations = self.background.translations;
+        let pause = self.pause;
         let mut index = 0;
 
         self.gl.draw(viewport, |c, g| {
@@ -108,7 +109,9 @@ impl Canvas {
             let trans = c.transform.trans(horizontal, vertical);
             scene.draw(trans, g);
 
-            text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
+            if pause {
+                text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
+            }
         });
     }
 
