@@ -10,40 +10,7 @@ use piston::input::*;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
 
-use game::assets::Assets;
-
-struct Background {
-    levels: [Texture; 4],
-    translations: [f64; 4],
-}
-
-impl Background {
-    fn new() -> Background {
-        Background {
-            levels: [
-                Assets::texture("parallax-forest-back-trees.png"),
-                Assets::texture("parallax-forest-middle-trees.png"),
-                Assets::texture("parallax-forest-lights.png"),
-                Assets::texture("parallax-forest-front-trees.png"),
-            ],
-            translations: [0.0, 0.0, 0.0, 0.0],
-        }
-    }
-
-    fn animate(&mut self) {
-        self.translations[0] -= 0.03;
-        self.translations[1] -= 0.06;
-        self.translations[3] -= 0.2;
-
-        let min: f64 = -1.0 * self.levels[0].get_width() as f64;
-        for i in 0..4 {
-            if self.translations[i] < min {
-                self.translations[i] = 0.0;
-            }
-        }
-    }
-}
-
+use game::assets::*;
 
 pub struct Canvas {
     gl: GlGraphics,
