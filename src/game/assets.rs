@@ -47,6 +47,10 @@ impl Background {
         }
     }
 
+    pub fn get_width(&mut self) -> f64 {
+        return self.levels[0].get_width() as f64;
+    }
+
     pub fn animate(&mut self) {
         self.translations[0] -= 0.03;
         self.translations[1] -= 0.06;

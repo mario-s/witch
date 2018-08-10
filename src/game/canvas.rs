@@ -129,7 +129,7 @@ impl Canvas {
     }
 
     fn move_right(&mut self) {
-        let max: f64 = self.background.levels[0].get_width() as f64 - Canvas::W_Y;
+        let max: f64 = self.background.get_width() - Canvas::W_Y;
         if self.horizontal < max {
             self.horizontal += Canvas::W_SPEED;
         }
