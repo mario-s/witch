@@ -60,7 +60,7 @@ impl Background {
     }
 
     fn reset(&mut self) {
-        let min: f64 = -1.0 * self.levels[0].get_width() as f64;
+        let min: f64 = -1.0 * self.get_width();
         for i in 0..4 {
             if self.translations[i] < min {
                 self.translations[i] = 0.0;
