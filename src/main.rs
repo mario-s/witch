@@ -38,6 +38,8 @@ fn main() {
         if let Some(p) = e.press_args() {
             canvas.input(p);
         }
+
+        e.mouse_relative(|dx, dy| println!("Relative mouse moved '{} {}'", dx, dy));
     }
 }
 

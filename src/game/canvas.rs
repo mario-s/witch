@@ -27,6 +27,8 @@ impl Canvas {
     //start position of the sprite
     const W_X: f64 = 50.0;
     const W_Y: f64 = 80.0;
+    //max allowed left position
+    const M_LEFT: f64 = -10.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
         Canvas {
@@ -96,11 +98,8 @@ impl Canvas {
     }
 
     fn toggle(&mut self,  b: Button) {
-        match b {
-            Button::Keyboard(Key::P) => {
-                self.pause = !self.pause;
-            }
-            _ => ()
+        if b == Button::Keyboard(Key::P) {
+            self.pause = !self.pause;
         }
     }
 
@@ -123,7 +122,7 @@ impl Canvas {
     }
 
     fn move_left(&mut self) {
-        if self.horizontal > -10.0 {
+        if self.horizontal > Canvas::M_LEFT {
             self.horizontal -= Canvas::W_SPEED;
         }
     }
