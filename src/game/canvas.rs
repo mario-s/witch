@@ -17,6 +17,7 @@ pub struct Canvas {
     background: Background,
     horizontal: f64,
     vertical: f64,
+    max_right: f64,
     witch: Rc<Texture>,
     pause: bool
 }
@@ -31,11 +32,14 @@ impl Canvas {
     const M_LEFT: f64 = -10.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
+        let mut bg = Background::new();
+        let max = bg.get_width() - Canvas::W_Y;
         Canvas {
             gl: GlGraphics::new(opengl),
-            background: Background::new(),
+            background: bg,
             horizontal: 0.0,
             vertical: 0.0,
+            max_right: max,
             witch: Rc::new(Assets::icon("witch-icon.png")),
             pause: true,
         }
@@ -89,7 +93,7 @@ impl Canvas {
     }
 
     pub fn input(&mut self, b: Button) {
-        println!("Pressed keyboard key '{:?}'", b);
+        //println!("Pressed keyboard key '{:?}'", b);
         if !self.pause {
             self.do_move(b);
         }
@@ -122,15 +126,16 @@ impl Canvas {
     }
 
     fn move_horizontal(&mut self, d_x: f64) {
-        let max: f64 = self.background.get_width() - Canvas::W_Y;
-        if self.horizontal > Canvas::M_LEFT && self.horizontal < max {
+        if self.horizontal > Canvas::M_LEFT && self.horizontal < self.max_right {
             self.horizontal += d_x;
         }
     }
 
     fn move_vertical(&mut self, d_y: f64) {
-        if self.vertical > -Canvas::W_X && self.vertical < Canvas::W_X {
+        if self.vertical >= -Canvas::W_X && self.vertical < Canvas::W_X {
             self.vertical += d_y;
-        }
+        } else if d_y > 0.0 {
+            self.vertical = Canvas::W_X;
+        } 
     }
 }
