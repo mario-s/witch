@@ -46,8 +46,8 @@ fn window() -> OpenGlWindow {
     //initial version of OpenGL
     let mut opengl = OpenGL::V3_1;
     let result = build(opengl);
-    //if the result is success return it, if not try with another version of OpenGL. 
-    //Give up if that also fails.
+    //If the result is success return it, if not try with another version of OpenGL. 
+    //Give up, if that also fails.
     let window = match result {
         Ok(win) => win,
         Err(_err) => {
@@ -63,7 +63,7 @@ fn window() -> OpenGlWindow {
 }
 
 fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, String> {
-    return WindowSettings::new("super.mario",[272, 160])
+    WindowSettings::new("super.mario",[272, 160])
         .opengl(opengl).resizable(false).exit_on_esc(true)
-        .build();
+        .build()
 }

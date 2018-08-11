@@ -11,21 +11,21 @@ impl Assets {
     pub fn assets(path: &str) -> PathBuf {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets").unwrap();
-        return assets.join(path);
+        assets.join(path)
     }
 
     pub fn texture(name: &str) -> Texture {
         let path = "layers/".to_string() + name;
-        return Assets::from_path(&path);
+        Assets::from_path(&path)
     }
 
     pub fn icon(name: &str) -> Texture {
         let path = "icons/".to_string() + name;
-        return Assets::from_path(&path);
+        Assets::from_path(&path)
     }
 
     fn from_path(path: &str) -> Texture {
-        return Texture::from_path(Assets::assets(path), &TextureSettings::new()).unwrap();
+        Texture::from_path(Assets::assets(path), &TextureSettings::new()).unwrap()
     }
 }
 
@@ -48,7 +48,7 @@ impl Background {
     }
 
     pub fn get_width(&mut self) -> f64 {
-        return self.levels[0].get_width() as f64;
+        self.levels[0].get_width() as f64
     }
 
     pub fn animate(&mut self) {
