@@ -134,8 +134,6 @@ impl Canvas {
     fn move_vertical(&mut self, d_y: f64) {
         if self.vertical >= -Canvas::W_X && self.vertical < Canvas::W_X {
             self.vertical += d_y;
-        } else if d_y > 0.0 {
-            self.vertical = Canvas::W_X;
         } 
     }
 }
