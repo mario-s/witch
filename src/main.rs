@@ -56,7 +56,7 @@ fn window() -> OpenGlWindow {
         }
     };
 
-    return OpenGlWindow {
+    OpenGlWindow {
         opengl: opengl,
         window: window, 
     }
