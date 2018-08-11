@@ -126,14 +126,16 @@ impl Canvas {
     }
 
     fn move_horizontal(&mut self, d_x: f64) {
-        if self.horizontal > Canvas::M_LEFT && self.horizontal < self.max_right {
-            self.horizontal += d_x;
+        let next: f64 = self.horizontal + d_x;
+        if next >= Canvas::M_LEFT && next <= self.max_right {
+            self.horizontal = next;
         }
     }
 
     fn move_vertical(&mut self, d_y: f64) {
-        if self.vertical >= -Canvas::W_X && self.vertical < Canvas::W_X {
-            self.vertical += d_y;
+        let next: f64 = self.vertical + d_y;
+        if next >= -Canvas::W_X && next <= Canvas::W_X {
+            self.vertical = next;
         } 
     }
 }
