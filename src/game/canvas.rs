@@ -106,43 +106,31 @@ impl Canvas {
     fn do_move(&mut self, b: Button) {
         match b {
             Button::Keyboard(Key::Up) => {
-                self.move_up()
+                self.move_vertical(-Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Down) => {
-                self.move_down()
+                self.move_vertical(Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Left) => {
-                self.move_left()
+                self.move_horizontal(-Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Right) => {
-                self.move_right()
+                self.move_horizontal(Canvas::W_SPEED)
             }
             _ => ()
         }
     }
 
-    fn move_left(&mut self) {
-        if self.horizontal > Canvas::M_LEFT {
-            self.horizontal -= Canvas::W_SPEED;
-        }
-    }
-
-    fn move_right(&mut self) {
+    fn move_horizontal(&mut self, d_x: f64) {
         let max: f64 = self.background.get_width() - Canvas::W_Y;
-        if self.horizontal < max {
-            self.horizontal += Canvas::W_SPEED;
+        if self.horizontal > Canvas::M_LEFT && self.horizontal < max {
+            self.horizontal += d_x;
         }
     }
 
-    fn move_up(&mut self) {
-        if self.vertical > -Canvas::W_X {
-            self.vertical -= Canvas::W_SPEED;
-        }
-    }
-
-    fn move_down(&mut self) {
-        if self.vertical < Canvas::W_X {
-            self.vertical += Canvas::W_SPEED
+    fn move_vertical(&mut self, d_y: f64) {
+        if self.vertical > -Canvas::W_X && self.vertical < Canvas::W_X {
+            self.vertical += d_y;
         }
     }
 }
