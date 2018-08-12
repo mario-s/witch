@@ -10,63 +10,38 @@ use piston::input::*;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Texture};
 use graphics::*;
 
-use game::assets::Assets;
-
-struct Background {
-    levels: [Texture; 4],
-    translations: [f64; 4],
-}
-
-impl Background {
-    fn new() -> Background {
-        Background {
-            levels: [
-                Assets::texture("parallax-forest-back-trees.png"),
-                Assets::texture("parallax-forest-middle-trees.png"),
-                Assets::texture("parallax-forest-lights.png"),
-                Assets::texture("parallax-forest-front-trees.png"),
-            ],
-            translations: [0.0, 0.0, 0.0, 0.0],
-        }
-    }
-
-    fn animate(&mut self) {
-        self.translations[0] -= 0.03;
-        self.translations[1] -= 0.06;
-        self.translations[3] -= 0.2;
-
-        let min: f64 = -1.0 * self.levels[0].get_width() as f64;
-        for i in 0..4 {
-            if self.translations[i] < min {
-                self.translations[i] = 0.0;
-            }
-        }
-    }
-}
-
+use game::assets::*;
 
 pub struct Canvas {
     gl: GlGraphics,
     background: Background,
     horizontal: f64,
     vertical: f64,
-    witch: Rc<Texture>
+    max_right: f64,
+    witch: Rc<Texture>,
+    pause: bool
 }
 
 impl Canvas {
     const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
-    const W_SPEED: f64 = 3.0;
+    const W_SPEED: f64 = 4.0;
     //start position of the sprite
     const W_X: f64 = 50.0;
     const W_Y: f64 = 80.0;
+    //max allowed left position
+    const M_LEFT: f64 = -10.0;
 
     pub fn new(opengl: OpenGL) -> Canvas {
+        let mut bg = Background::new();
+        let max = bg.get_width() - Canvas::W_Y;
         Canvas {
             gl: GlGraphics::new(opengl),
-            background: Background::new(),
+            background: bg,
             horizontal: 0.0,
             vertical: 0.0,
+            max_right: max,
             witch: Rc::new(Assets::icon("witch-icon.png")),
+            pause: true,
         }
     }
 
@@ -90,6 +65,7 @@ impl Canvas {
         let horizontal = self.horizontal;
         let vertical = self.vertical;    
         let translations = self.background.translations;
+        let pause = self.pause;
         let mut index = 0;
 
         self.gl.draw(viewport, |c, g| {
@@ -106,7 +82,9 @@ impl Canvas {
             let trans = c.transform.trans(horizontal, vertical);
             scene.draw(trans, g);
 
-            text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
+            if pause {
+                text(Canvas::WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
+            }
         });
     }
 
@@ -115,46 +93,49 @@ impl Canvas {
     }
 
     pub fn input(&mut self, b: Button) {
-        println!("Pressed keyboard key '{:?}'", b);
+        //println!("Pressed keyboard key '{:?}'", b);
+        if !self.pause {
+            self.do_move(b);
+        }
+        
+        self.toggle(b);
+    }
+
+    fn toggle(&mut self,  b: Button) {
+        if b == Button::Keyboard(Key::P) {
+            self.pause = !self.pause;
+        }
+    }
+
+    fn do_move(&mut self, b: Button) {
         match b {
             Button::Keyboard(Key::Up) => {
-                self.move_up()
+                self.move_vertical(-Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Down) => {
-                self.move_down()
+                self.move_vertical(Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Left) => {
-                self.move_left()
+                self.move_horizontal(-Canvas::W_SPEED)
             }
             Button::Keyboard(Key::Right) => {
-                self.move_right()
+                self.move_horizontal(Canvas::W_SPEED)
             }
             _ => ()
         }
     }
 
-    fn move_left(&mut self) {
-        if self.horizontal > -10.0 {
-            self.horizontal -= Canvas::W_SPEED;
+    fn move_horizontal(&mut self, d_x: f64) {
+        let next: f64 = self.horizontal + d_x;
+        if next >= Canvas::M_LEFT && next <= self.max_right {
+            self.horizontal = next;
         }
     }
 
-    fn move_right(&mut self) {
-        let max: f64 = self.background.levels[0].get_width() as f64 - Canvas::W_Y;
-        if self.horizontal < max {
-            self.horizontal += Canvas::W_SPEED;
-        }
-    }
-
-    fn move_up(&mut self) {
-        if self.vertical > -Canvas::W_X {
-            self.vertical -= Canvas::W_SPEED;
-        }
-    }
-
-    fn move_down(&mut self) {
-        if self.vertical < Canvas::W_X {
-            self.vertical += Canvas::W_SPEED
-        }
+    fn move_vertical(&mut self, d_y: f64) {
+        let next: f64 = self.vertical + d_y;
+        if next >= -Canvas::W_X && next <= Canvas::W_X {
+            self.vertical = next;
+        } 
     }
 }
