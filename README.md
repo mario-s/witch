@@ -7,9 +7,10 @@ Blair Witch
 side scroller
 ---
 
-This is a project to learn Rust be developing a very simple game. 
+This is a project to learn Rust by developing a very simple game. 
 So far I achieved:
 
 * loading images
 * continue parallax side scrolling of the background
+* key board control: p for start/stop, arrow buttons for directions
 
