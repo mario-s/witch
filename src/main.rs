@@ -5,11 +5,13 @@ extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
 
+use std::str::FromStr;
 use piston::window::*;
 use piston::event_loop::*;
 use piston::input::*;
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::OpenGL;
+use piston::window::BuildFromWindowSettings;
 
 mod game;
 
@@ -41,27 +43,23 @@ fn main() {
     }
 }
 
-//try to build a window
 fn window() -> OpenGlWindow {
-    //initial version of OpenGL
-    let mut opengl = OpenGL::V3_1;
-    let result = build(opengl);
-    //If the result is success return it, if not try with another version of OpenGL. 
-    //Give up, if that also fails.
-    let window = match result {
-        Ok(win) => win,
-        Err(_err) => {
-            opengl = OpenGL::V3_2;
-            build(opengl).unwrap()
+    let versions: [&str; 2] = ["3.1", "3.2"];
+    for v in versions.into_iter() {
+        let opengl = OpenGL::from_str(v).unwrap();
+        let result: Result<Window, String> = build(opengl);
+        //if the result is ok, a supported opengl version is available
+        if result.is_ok() {
+            return OpenGlWindow {
+                opengl: opengl,
+                window: result.unwrap(), 
+            }
         }
-    };
-
-    OpenGlWindow {
-        opengl: opengl,
-        window: window, 
     }
+    panic!("No supported OpenGl version found! {:?}", versions);    
 }
 
+//try to build a window
 fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, String> {
     WindowSettings::new("super.mario",[272, 160])
         .opengl(opengl).resizable(false).exit_on_esc(true)
