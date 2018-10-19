@@ -55,3 +55,26 @@ impl Controller {
         } 
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn setup() -> Controller {
+        return Controller::new(WITCH_START_Y + 5.0);
+    } 
+
+    #[test]
+    fn controller_move_down() {
+        let mut c = setup();
+        c.do_move(Button::Keyboard(Key::Down));
+        assert_eq!(c.vertical, WITCH_SPEED);
+    }
+
+    #[test]
+    fn controller_move_right() {
+        let mut c = setup();
+        c.do_move(Button::Keyboard(Key::Right));
+        assert_eq!(c.horizontal, WITCH_SPEED);
+    }
+}
