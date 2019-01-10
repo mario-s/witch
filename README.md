@@ -7,7 +7,10 @@ Blair Witch
 side scroller
 ---
 
-This is a project to learn Rust by developing a very simple game. 
+This is a project to learn Rust by developing a very simple game.
+
+It uses the [piston game engine](https://github.com/PistonDevelopers/piston).
+
 So far I achieved:
 
 * loading images
