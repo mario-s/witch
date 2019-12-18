@@ -1,11 +1,11 @@
-name: Rust Build
+name: Rust
 
 on: [push]
 
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
