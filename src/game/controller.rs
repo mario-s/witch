@@ -26,16 +26,40 @@ impl Controller {
     pub fn do_move(&mut self, b: Button) {
         match b {
             Button::Keyboard(Key::Up) => {
+                //up
                 self.move_vertical(-WITCH_SPEED)
             }
             Button::Keyboard(Key::Down) => {
+                //down
                 self.move_vertical(WITCH_SPEED)
             }
             Button::Keyboard(Key::Left) => {
+                //left
                 self.move_horizontal(-WITCH_SPEED)
             }
             Button::Keyboard(Key::Right) => {
+                //right
                 self.move_horizontal(WITCH_SPEED)
+            }
+            Button::Keyboard(Key::E) => {
+                //right up
+                self.move_horizontal(WITCH_SPEED);
+                self.move_vertical(-WITCH_SPEED);
+            }
+            Button::Keyboard(Key::Q) => {
+                //left up
+                self.move_horizontal(-WITCH_SPEED);
+                self.move_vertical(-WITCH_SPEED);
+            }
+            Button::Keyboard(Key::D) => {
+                //right down
+                self.move_horizontal(WITCH_SPEED);
+                self.move_vertical(WITCH_SPEED);
+            }
+            Button::Keyboard(Key::A) => {
+                //left down
+                self.move_horizontal(-WITCH_SPEED);
+                self.move_vertical(WITCH_SPEED);
             }
             _ => ()
         }
