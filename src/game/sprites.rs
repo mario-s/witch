@@ -4,29 +4,27 @@ use opengl_graphics::Texture;
 
 use game::assets::*;
 
-//start position of the sprite
-pub const WITCH_START_X: f64 = 50.0;
-pub const WITCH_START_Y: f64 = 80.0;
+pub const WITCH_ICON: &str = "witch-icon.png";
 
-pub struct Witch {
+//start position of the sprite for the witch
+pub const WITCH_X: f64 = 50.0;
+pub const WITCH_Y: f64 = 80.0;
+
+pub struct Figure {
     sprite: Rc<Texture>,
 }
 
-pub trait Figure {
-    fn new() -> Witch {
-        Witch {
-            sprite: Rc::new(Assets::icon("witch-icon.png"))
+impl Figure {
+
+    pub fn new(icon: &str) -> Figure {
+        Figure {
+            sprite: Rc::new(Assets::icon(icon))
         }
     }
 
-    fn clone(&mut self) -> Sprite<Texture>;
-}
-
-impl Figure for Witch {
-
-    fn clone(&mut self) -> Sprite<Texture> {
+    pub fn sprite_at(&mut self, x: f64, y: f64) -> Sprite<Texture> {
         let mut sprite = Sprite::from_texture(self.sprite.clone());
-        sprite.set_position(WITCH_START_X, WITCH_START_Y);
+        sprite.set_position(x, y);
         return sprite;
     }
 }

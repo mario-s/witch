@@ -20,7 +20,7 @@ pub struct Canvas {
     gl: GlGraphics,
     background: Background,
     controller: Controller,
-    witch: Witch,
+    witch: Figure,
     pause: bool
 }
 
@@ -32,7 +32,7 @@ impl Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
-            witch: Witch::new(),
+            witch: Figure::new(WITCH_ICON),
             pause: true,
         }
     }
@@ -42,7 +42,7 @@ impl Canvas {
         let viewport = r_arg.viewport();
 
         let mut scene = Scene::new();
-        scene.add_child(self.witch.clone());
+        scene.add_child(self.witch.sprite_at(WITCH_X, WITCH_Y));
 
         let imgs = &self.background.levels;
 

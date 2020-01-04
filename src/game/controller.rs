@@ -15,7 +15,7 @@ pub struct Controller {
 
 impl Controller {
     pub fn new(width: f64) -> Controller {
-        let max = width - WITCH_START_Y;
+        let max = width - WITCH_Y;
         Controller {
             horizontal: 0.0,
             vertical: 0.0,
@@ -74,7 +74,7 @@ impl Controller {
 
     fn move_vertical(&mut self, d_y: f64) {
         let next: f64 = self.vertical + d_y;
-        if next >= -WITCH_START_X && next <= WITCH_START_X {
+        if next >= -WITCH_X && next <= WITCH_X {
             self.vertical = next;
         } 
     }
@@ -85,7 +85,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        return Controller::new(WITCH_START_Y + 5.0);
+        return Controller::new(WITCH_Y + 5.0);
     } 
 
     #[test]
