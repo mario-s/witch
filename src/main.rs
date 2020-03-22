@@ -5,6 +5,7 @@ extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
 
+use std::error::Error;
 use std::str::FromStr;
 use piston::window::*;
 use piston::event_loop::*;
@@ -45,9 +46,9 @@ fn main() {
 
 fn window() -> OpenGlWindow {
     let versions: [&str; 2] = ["3.1", "3.2"];
-    for v in versions.into_iter() {
+    for v in versions.iter() {
         let opengl = OpenGL::from_str(v).unwrap();
-        let result: Result<Window, String> = build(opengl);
+        let result: Result<Window, Box<dyn Error>> = build(opengl);
         //if the result is ok, a supported opengl version is available
         if result.is_ok() {
             return OpenGlWindow {
@@ -60,8 +61,8 @@ fn window() -> OpenGlWindow {
 }
 
 //try to build a window
-fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, String> {
+fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, Box<dyn Error>> {
     WindowSettings::new("super.mario",[272, 160])
-        .opengl(opengl).resizable(false).exit_on_esc(true)
+        .resizable(false).exit_on_esc(true).graphics_api(opengl)
         .build()
 }

@@ -9,7 +9,7 @@ Side Scroller
 
 This is a project to learn Rust by developing a simple game.
 
-It uses the [piston game engine](https://github.com/PistonDevelopers/piston).
+It uses the [piston game engine](https://github.com/PistonDevelopers/piston) and version 1.41.1 of Rust.
 
 So far I achieved:
 
