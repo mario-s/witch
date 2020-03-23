@@ -19,7 +19,7 @@ mod game;
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 enum Music {
-    Piano,
+    Synth,
 }
 
 //window with the version of OpenGL
@@ -29,17 +29,15 @@ struct OpenGlWindow {
 }
 
 fn main() {
-    let win: OpenGlWindow = window();
-    let mut window: Window = win.window;
-
-    let mut canvas = game::Canvas::new(win.opengl);
-    let mut events = Events::new(EventSettings::new());
-
     music::start::<Music, Music ,_>(16, || {
-        music::bind_music_file(Music::Piano, "./assets/sound/lost.wav");
-
+        music::bind_music_file(Music::Synth, "./assets/sound/lost.wav");
         music::set_volume(music::MAX_VOLUME);
-        music::play_music(&Music::Piano, music::Repeat::Forever);
+        music::play_music(&Music::Synth, music::Repeat::Forever);
+
+        let win: OpenGlWindow = window();
+        let mut window: Window = win.window;
+        let mut canvas = game::Canvas::new(win.opengl);
+        let mut events = Events::new(EventSettings::new());
 
         while let Some(e) = events.next(&mut window) {
             if let Some(r) = e.render_args() {
