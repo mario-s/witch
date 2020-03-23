@@ -4,6 +4,7 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
+extern crate music;
 
 use std::error::Error;
 use std::str::FromStr;
@@ -15,6 +16,11 @@ use opengl_graphics::OpenGL;
 use piston::window::BuildFromWindowSettings;
 
 mod game;
+
+#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+enum Music {
+    Piano,
+}
 
 //window with the version of OpenGL
 struct OpenGlWindow {
@@ -29,19 +35,26 @@ fn main() {
     let mut canvas = game::Canvas::new(win.opengl);
     let mut events = Events::new(EventSettings::new());
 
-    while let Some(e) = events.next(&mut window) {
-        if let Some(r) = e.render_args() {
-            canvas.render(r);
-        }
+    music::start::<Music, Music ,_>(16, || {
+        music::bind_music_file(Music::Piano, "./assets/sound/lost.wav");
 
-        if let Some(u) = e.update_args() {
-            canvas.update(u);
-        }
+        music::set_volume(music::MAX_VOLUME);
+        music::play_music(&Music::Piano, music::Repeat::Forever);
 
-        if let Some(p) = e.press_args() {
-            canvas.input(p);
+        while let Some(e) = events.next(&mut window) {
+            if let Some(r) = e.render_args() {
+                canvas.render(r);
+            }
+    
+            if let Some(u) = e.update_args() {
+                canvas.update(u);
+            }
+    
+            if let Some(p) = e.press_args() {
+                canvas.input(p);
+            }
         }
-    }
+    });
 }
 
 fn window() -> OpenGlWindow {
