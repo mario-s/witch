@@ -16,6 +16,7 @@ use opengl_graphics::OpenGL;
 use piston::window::BuildFromWindowSettings;
 
 mod game;
+use game::Canvas;
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 enum Music {
@@ -29,15 +30,16 @@ struct OpenGlWindow {
 }
 
 fn main() {
-    music::start::<Music, Music ,_>(16, || {
+    music::start::<Music, Music ,_>(32, || {
         music::bind_music_file(Music::Synth, "./assets/sound/lost.wav");
         music::set_volume(music::MAX_VOLUME);
-        music::play_music(&Music::Synth, music::Repeat::Forever);
 
         let win: OpenGlWindow = window();
         let mut window: Window = win.window;
-        let mut canvas = game::Canvas::new(win.opengl);
+        let mut canvas = Canvas::new(win.opengl);
         let mut events = Events::new(EventSettings::new());
+
+        music::play_music(&Music::Synth, music::Repeat::Forever);
 
         while let Some(e) = events.next(&mut window) {
             if let Some(r) = e.render_args() {
@@ -50,6 +52,10 @@ fn main() {
     
             if let Some(p) = e.press_args() {
                 canvas.input(p);
+                match canvas.pause {
+                    false => music::set_volume(music::MIN_VOLUME),
+                    _     => music::set_volume(music::MAX_VOLUME),
+                };
             }
         }
     });

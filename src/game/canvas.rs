@@ -21,7 +21,7 @@ pub struct Canvas {
     background: Background,
     controller: Controller,
     witch: Figure,
-    pause: bool
+    pub pause: bool
 }
 
 impl Canvas {
