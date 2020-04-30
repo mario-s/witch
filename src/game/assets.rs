@@ -1,9 +1,11 @@
 extern crate find_folder;
 extern crate opengl_graphics;
 
+
 use std::path::PathBuf;
 use graphics::ImageSize;
 use opengl_graphics::{ TextureSettings, Texture};
+
 
 pub struct Assets {}
 
@@ -27,6 +29,7 @@ impl Assets {
     fn from_path(path: &str) -> Texture {
         Texture::from_path(Assets::assets(path), &TextureSettings::new()).unwrap()
     }
+
 }
 
 pub struct Background {
