@@ -39,7 +39,6 @@ impl Canvas {
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
-        Assets::intro();
         let viewport = r_arg.viewport();
 
         let mut scene = Scene::new();
