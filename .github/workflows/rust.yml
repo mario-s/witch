@@ -9,8 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: SDL2 install
+    - name: Install SDL2
       run: brew install sdl2
+    - name: Install SDL2 Mixer
+      run: brew install sdl2_mixer
     - name: Build
       run: cargo build --verbose
     - name: Run tests
