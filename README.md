@@ -15,6 +15,7 @@ So far I achieved:
 
 * loading images
 * continue parallax side scrolling of the background
+* [background music](https://freemusicarchive.org/music/Floating_Spirits/S27-X_II/Floating_Spirits_-_S27-X_II_-_06_Rise_Above)
 * key board control: 
   * P for start/stop
   * Arrow Up for up

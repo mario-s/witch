@@ -31,7 +31,7 @@ struct OpenGlWindow {
 
 fn main() {
     music::start::<Music, Music ,_>(32, || {
-        music::bind_music_file(Music::Synth, "./assets/sound/lost.wav");
+        music::bind_music_file(Music::Synth, "./assets/sound/rise.wav");
         music::set_volume(music::MAX_VOLUME);
 
         let win: OpenGlWindow = window();
