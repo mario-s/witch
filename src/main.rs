@@ -4,6 +4,7 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
+extern crate music;
 
 use std::error::Error;
 use std::str::FromStr;
@@ -15,6 +16,12 @@ use opengl_graphics::OpenGL;
 use piston::window::BuildFromWindowSettings;
 
 mod game;
+use game::Canvas;
+
+#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+enum Music {
+    Synth,
+}
 
 //window with the version of OpenGL
 struct OpenGlWindow {
@@ -23,25 +30,35 @@ struct OpenGlWindow {
 }
 
 fn main() {
-    let win: OpenGlWindow = window();
-    let mut window: Window = win.window;
+    music::start::<Music, Music ,_>(32, || {
+        music::bind_music_file(Music::Synth, "./assets/sound/rise.wav");
+        music::set_volume(music::MAX_VOLUME);
 
-    let mut canvas = game::Canvas::new(win.opengl);
-    let mut events = Events::new(EventSettings::new());
+        let win: OpenGlWindow = window();
+        let mut window: Window = win.window;
+        let mut canvas = Canvas::new(win.opengl);
+        let mut events = Events::new(EventSettings::new());
 
-    while let Some(e) = events.next(&mut window) {
-        if let Some(r) = e.render_args() {
-            canvas.render(r);
+        music::play_music(&Music::Synth, music::Repeat::Forever);
+
+        while let Some(e) = events.next(&mut window) {
+            if let Some(r) = e.render_args() {
+                canvas.render(r);
+            }
+    
+            if let Some(u) = e.update_args() {
+                canvas.update(u);
+            }
+    
+            if let Some(p) = e.press_args() {
+                canvas.input(p);
+                match canvas.pause {
+                    false => music::set_volume(music::MIN_VOLUME),
+                    _     => music::set_volume(music::MAX_VOLUME),
+                };
+            }
         }
-
-        if let Some(u) = e.update_args() {
-            canvas.update(u);
-        }
-
-        if let Some(p) = e.press_args() {
-            canvas.input(p);
-        }
-    }
+    });
 }
 
 fn window() -> OpenGlWindow {
