@@ -61,16 +61,17 @@ impl Canvas {
 
             for texture in imgs.into_iter() {
                 let translation = translations[index];
-                let width: f64 = texture.get_width() as f64;
+                let width = texture.get_width() as f64;
                 image(texture, mat.trans(translation, 0.0), g);
                 image(texture, mat.trans(width + translation, 0.0), g);
-
-                if index == 0 && pause {
-                    let height: f64 = texture.get_height() as f64;
-                    text(BLACK, 30, TEXT, &mut cache, mat.trans(width/2.0, height/2.0), g);
-                }
-
                 index += 1;
+            }
+
+            if pause {
+                let img = &imgs[0];
+                let w = img.get_width() as f64;
+                let h = img.get_height() as f64;
+                text(BLACK, 30, TEXT, &mut cache, mat.trans(w/2.0, h/2.0), g);
             }
 
             scene.draw(mat.trans(horizontal, vertical), g);

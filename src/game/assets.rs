@@ -33,20 +33,26 @@ impl Assets {
 }
 
 pub struct Background {
-    pub levels: [Texture; 4],
-    pub translations: [f64; 4],
+    pub levels: [Texture; 10],
+    pub translations: [f64; 10],
 }
 
 impl Background {
     pub fn new() -> Background {
         Background {
             levels: [
-                Assets::texture("01_Mist.png"),
-                Assets::texture("02_Bushes.png"),
-                Assets::texture("03_Particles.png"),
+                Assets::texture("10_Sky.png"),
+                Assets::texture("09_Forest.png"),
+                Assets::texture("08_Forest.png"),
+                Assets::texture("07_Forest.png"),
+                Assets::texture("06_Forest.png"),
+                Assets::texture("05_Particles.png"),
                 Assets::texture("04_Forest.png"),
+                Assets::texture("03_Particles.png"),
+                Assets::texture("02_Bushes.png"),
+                Assets::texture("01_Mist.png"),
             ],
-            translations: [0.0, 0.0, 0.0, 0.0],
+            translations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         }
     }
 
