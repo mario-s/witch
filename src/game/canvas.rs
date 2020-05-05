@@ -16,6 +16,7 @@ use game::sprites::*;
 
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+const TEXT: &str = "Blair Witch";
 
 pub struct Canvas {
     gl: GlGraphics,
@@ -46,11 +47,10 @@ impl Canvas {
         scene.add_child(self.witch.sprite_at(WITCH_X, WITCH_Y));
 
         let imgs = &self.background.levels;
-
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
 
         let horizontal = self.controller.horizontal;
-        let vertical = self.controller.vertical;    
+        let vertical = self.controller.vertical;
         let translations = self.background.translations;
         let pause = self.pause;
         let mut index = 0;
@@ -64,11 +64,13 @@ impl Canvas {
                 let width: f64 = texture.get_width() as f64;
                 image(texture, mat.trans(translation, 0.0), g);
                 image(texture, mat.trans(width + translation, 0.0), g);
-                index += 1;
-            }
 
-            if pause {
-                text(BLACK, 30, "Blair Witch", &mut cache, mat.trans(100.0, 90.0), g);
+                if index == 0 && pause {
+                    let height: f64 = texture.get_height() as f64;
+                    text(BLACK, 30, TEXT, &mut cache, mat.trans(width/2.0, height/2.0), g);
+                }
+
+                index += 1;
             }
 
             scene.draw(mat.trans(horizontal, vertical), g);
