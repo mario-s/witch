@@ -27,7 +27,7 @@ pub struct Canvas {
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
         let mut bg = Background::new();
-        let controller = Controller::new(bg.get_width());
+        let controller = Controller::new(bg.get_width(), bg.get_height());
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
