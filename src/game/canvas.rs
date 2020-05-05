@@ -15,6 +15,7 @@ use game::sprites::*;
 
 
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 
 pub struct Canvas {
     gl: GlGraphics,
@@ -67,7 +68,7 @@ impl Canvas {
             }
 
             if pause {
-                text(WHITE, 30, "Blair Witch", &mut cache, mat.trans(100.0, 90.0), g);
+                text(BLACK, 30, "Blair Witch", &mut cache, mat.trans(100.0, 90.0), g);
             }
 
             scene.draw(mat.trans(horizontal, vertical), g);
