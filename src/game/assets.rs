@@ -55,8 +55,9 @@ impl Background {
     }
 
     pub fn animate(&mut self) {
-        self.translations[0] -= 0.03;
-        self.translations[1] -= 0.06;
+        let speed = 0.03;
+        self.translations[0] -= speed;
+        self.translations[1] -= speed * 2.0;
         self.translations[3] -= 0.2;
 
         self.reset();
