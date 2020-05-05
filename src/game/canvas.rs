@@ -56,21 +56,21 @@ impl Canvas {
 
         self.gl.draw(viewport, |c, g| {
             clear(WHITE, g);
+            let mat = c.transform;
 
             for texture in imgs.into_iter() {
                 let translation = translations[index];
                 let width: f64 = texture.get_width() as f64;
-                image(texture, c.transform.trans(translation, 0.0), g);
-                image(texture, c.transform.trans(width + translation, 0.0), g);
+                image(texture, mat.trans(translation, 0.0), g);
+                image(texture, mat.trans(width + translation, 0.0), g);
                 index += 1;
             }
 
-            let trans = c.transform.trans(horizontal, vertical);
-            scene.draw(trans, g);
-
             if pause {
-                text(WHITE, 30, &"Blair Witch", &mut cache, c.transform.trans(100.0, 90.0), g);
+                text(WHITE, 30, "Blair Witch", &mut cache, mat.trans(100.0, 90.0), g);
             }
+
+            scene.draw(mat.trans(horizontal, vertical), g);
         });
     }
 

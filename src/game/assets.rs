@@ -58,7 +58,7 @@ impl Background {
         let speed = 0.03;
         self.translations[0] -= speed;
         self.translations[1] -= speed * 2.0;
-        self.translations[3] -= 0.2;
+        self.translations[3] -= speed * 6.0;
 
         self.reset();
     }
