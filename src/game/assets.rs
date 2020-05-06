@@ -52,7 +52,7 @@ impl Background {
                 Assets::texture("02_Bushes.png"),
                 Assets::texture("01_Mist.png"),
             ],
-            translations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            translations: [0.0; 10],
         }
     }
 

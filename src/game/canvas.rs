@@ -14,7 +14,7 @@ use game::controller::Controller;
 use game::sprites::*;
 
 
-const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 const TEXT: &str = "Blair Witch";
 
@@ -60,10 +60,11 @@ impl Canvas {
             let mat = c.transform;
 
             for texture in imgs.into_iter() {
-                let translation = translations[index];
-                let width = texture.get_width() as f64;
-                image(texture, mat.trans(translation, 0.0), g);
-                image(texture, mat.trans(width + translation, 0.0), g);
+                let t = translations[index];
+                let w = texture.get_width() as f64;
+                //append two images for a continues scrolling background
+                image(texture, mat.trans(t, 0.0), g);
+                image(texture, mat.trans(t + w, 0.0), g);
                 index += 1;
             }
 
