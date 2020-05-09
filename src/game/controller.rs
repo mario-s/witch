@@ -6,19 +6,24 @@ const WITCH_SPEED: f64 = 5.0;
 pub struct Controller {
     pub horizontal: f64,
     pub vertical: f64,
-    max_right: f64,
-    max_bottom: f64
+    min_horizontal: f64,
+    max_horizontal: f64,
+    min_vertical: f64,
+    max_vertical: f64
 }
 
 impl Controller {
-    pub fn new(horizontal: f64, vertical: f64,
+    pub fn new(fig_width: u32, fig_height: u32,
+        horizontal: f64, vertical: f64,
         width: f64, height: f64) -> Controller {
 
         Controller {
             horizontal,
             vertical,
-            max_right: width,
-            max_bottom: height
+            min_horizontal: 0.0 + fig_width as f64 / 2.0,
+            max_horizontal: width - fig_width as f64 / 2.0,
+            min_vertical: 0.0 + fig_height as f64 / 2.0,
+            max_vertical: height - fig_height as f64 / 2.0,
         }
     }
 
@@ -66,14 +71,14 @@ impl Controller {
 
     fn move_horizontal(&mut self, d_x: f64) {
         let next: f64 = self.horizontal + d_x;
-        if next >= 0.0 && next <= self.max_right {
+        if next >= self.min_horizontal && next <= self.max_horizontal {
             self.horizontal = next;
         }
     }
 
     fn move_vertical(&mut self, d_y: f64) {
         let next: f64 = self.vertical + d_y;
-        if next >= 0.0 && next <= self.max_bottom {
+        if next >= self.min_vertical && next <= self.max_vertical {
             self.vertical = next;
         } 
     }
@@ -84,7 +89,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        return Controller::new(0.0, 0.0, 50.0, 80.0);
+        Controller::new(24, 24, 0.0, 0.0, 50.0, 80.0)
     } 
 
     #[test]

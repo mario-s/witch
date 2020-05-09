@@ -1,6 +1,7 @@
 use std::rc::Rc;
 use sprite::*;
 use opengl_graphics::Texture;
+use graphics::ImageSize;
 
 use game::assets::*;
 
@@ -19,9 +20,15 @@ impl Figure {
         }
     }
 
-    pub fn sprite_at(&mut self, x: f64, y: f64) -> Sprite<Texture> {
-        let mut sprite = Sprite::from_texture(self.sprite.clone());
-        sprite.set_position(x, y);
-        return sprite;
+    pub fn sprite(&mut self) -> Sprite<Texture> {
+        Sprite::from_texture(self.sprite.clone())
+    }
+
+    pub fn get_width(&mut self) -> u32 {
+        self.sprite.get_width()
+    }
+
+    pub fn get_height(&mut self) -> u32 {
+        self.sprite.get_height()
     }
 }

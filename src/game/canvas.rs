@@ -8,6 +8,7 @@ use sprite::*;
 use piston::input::*;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings};
 use graphics::*;
+use graphics::ImageSize;
 
 use game::assets::*;
 use game::controller::Controller;
@@ -28,15 +29,23 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
+        let mut witch = Figure::new(WITCH_ICON);
+        let witch_width = witch.get_width();
+        let witch_height = witch.get_height();
+
         let mut bg = Background::new();
-        let w = bg.get_width();
-        let h = bg.get_height();
-        let controller = Controller::new(w/2.0, h/2.0, w, h);
+        let bg_w = bg.get_width();
+        let bg_h = bg.get_height();
+
+        let controller = Controller::new(witch_width, witch_height, 
+            (bg_w/2.0) - 50.0, bg_h/2.0, 
+            bg_w, bg_h);
+
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
-            witch: Figure::new(WITCH_ICON),
+            witch,
             pause: true,
         }
     }
@@ -54,7 +63,7 @@ impl Canvas {
         let mut index = 0;
 
         let mut scene = Scene::new();
-        scene.add_child(self.witch.sprite_at(0.0, 0.0));
+        scene.add_child(self.witch.sprite());
 
         self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
@@ -69,7 +78,7 @@ impl Canvas {
             }
 
             if pause {
-                text(BLACK, 30, TEXT, &mut cache, 
+                text(BLACK, 40, TEXT, &mut cache, 
                     mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
