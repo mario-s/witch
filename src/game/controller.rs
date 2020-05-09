@@ -20,9 +20,9 @@ impl Controller {
         Controller {
             horizontal,
             vertical,
-            min_horizontal: 0.0 + fig_width as f64 / 2.0,
+            min_horizontal: fig_width as f64 / 2.0,
             max_horizontal: width - fig_width as f64 / 2.0,
-            min_vertical: 0.0 + fig_height as f64 / 2.0,
+            min_vertical: fig_height as f64 / 2.0,
             max_vertical: height - fig_height as f64 / 2.0,
         }
     }
