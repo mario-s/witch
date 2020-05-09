@@ -89,7 +89,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        Controller::new(24, 24, 0.0, 0.0, 50.0, 80.0)
+        Controller::new(2, 2, 0.0, 0.0, 20.0, 20.0)
     } 
 
     #[test]
