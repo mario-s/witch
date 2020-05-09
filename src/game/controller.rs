@@ -84,7 +84,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        return Controller::new(50.0, 80.0);
+        return Controller::new(0.0, 0.0, 50.0, 80.0);
     } 
 
     #[test]
