@@ -1,10 +1,6 @@
 use piston::input::*;
 
-use game::sprites::*;
-
 const WITCH_SPEED: f64 = 5.0;
-//max allowed left position
-const MAX_LEFT: f64 = -10.0;
 
 #[derive(Debug)]
 pub struct Controller {
@@ -15,12 +11,13 @@ pub struct Controller {
 }
 
 impl Controller {
-    pub fn new(width: f64, height: f64) -> Controller {
+    pub fn new(horizontal: f64, vertical: f64,
+        width: f64, height: f64) -> Controller {
 
         Controller {
-            horizontal: 0.0,
-            vertical: 0.0,
-            max_right: width - WITCH_Y,
+            horizontal,
+            vertical,
+            max_right: width,
             max_bottom: height
         }
     }
@@ -69,14 +66,14 @@ impl Controller {
 
     fn move_horizontal(&mut self, d_x: f64) {
         let next: f64 = self.horizontal + d_x;
-        if next >= MAX_LEFT && next <= self.max_right {
+        if next >= 0.0 && next <= self.max_right {
             self.horizontal = next;
         }
     }
 
     fn move_vertical(&mut self, d_y: f64) {
         let next: f64 = self.vertical + d_y;
-        if next >= -WITCH_X && next <= self.max_bottom {
+        if next >= 0.0 && next <= self.max_bottom {
             self.vertical = next;
         } 
     }
@@ -87,7 +84,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        return Controller::new(WITCH_Y + 5.0, WITCH_X);
+        return Controller::new(50.0, 80.0);
     } 
 
     #[test]

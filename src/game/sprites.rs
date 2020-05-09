@@ -6,9 +6,6 @@ use game::assets::*;
 
 pub const WITCH_ICON: &str = "witch-icon.png";
 
-//start position of the sprite for the witch
-pub const WITCH_X: f64 = 50.0;
-pub const WITCH_Y: f64 = 80.0;
 
 pub struct Figure {
     sprite: Rc<Texture>,

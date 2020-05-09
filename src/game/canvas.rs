@@ -29,7 +29,9 @@ pub struct Canvas {
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
         let mut bg = Background::new();
-        let controller = Controller::new(bg.get_width(), bg.get_height());
+        let w = bg.get_width();
+        let h = bg.get_height();
+        let controller = Controller::new(w/2.0, h/2.0, w, h);
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
@@ -41,41 +43,37 @@ impl Canvas {
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
-        let viewport = r_arg.viewport();
-
-        let mut scene = Scene::new();
-        scene.add_child(self.witch.sprite_at(WITCH_X, WITCH_Y));
-
-        let imgs = &self.background.levels;
-        let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
-
-        let horizontal = self.controller.horizontal;
-        let vertical = self.controller.vertical;
         let translations = self.background.translations;
+        let imgs = &self.background.levels;
+        let width = imgs[0].get_width() as f64;
+        let height = imgs[0].get_height() as f64;
+
+        let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
+        let controller = &self.controller;
         let pause = self.pause;
         let mut index = 0;
 
-        self.gl.draw(viewport, |c, g| {
+        let mut scene = Scene::new();
+        scene.add_child(self.witch.sprite_at(0.0, 0.0));
+
+        self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
             let mat = c.transform;
 
             for texture in imgs.into_iter() {
                 let t = translations[index];
-                let w = texture.get_width() as f64;
                 //append two images for a continues scrolling background
                 image(texture, mat.trans(t, 0.0), g);
-                image(texture, mat.trans(t + w, 0.0), g);
+                image(texture, mat.trans(t + width, 0.0), g);
                 index += 1;
             }
 
             if pause {
-                let img = &imgs[0];
-                let w = img.get_width() as f64;
-                let h = img.get_height() as f64;
-                text(BLACK, 30, TEXT, &mut cache, mat.trans(w/2.0, h/2.0), g);
+                text(BLACK, 30, TEXT, &mut cache, 
+                    mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
-            scene.draw(mat.trans(horizontal, vertical), g);
+            scene.draw(mat.trans(controller.horizontal, controller.vertical), g);
         });
     }
 
