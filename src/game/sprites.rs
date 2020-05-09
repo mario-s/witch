@@ -1,14 +1,12 @@
 use std::rc::Rc;
 use sprite::*;
 use opengl_graphics::Texture;
+use graphics::ImageSize;
 
 use game::assets::*;
 
 pub const WITCH_ICON: &str = "witch-icon.png";
 
-//start position of the sprite for the witch
-pub const WITCH_X: f64 = 50.0;
-pub const WITCH_Y: f64 = 80.0;
 
 pub struct Figure {
     sprite: Rc<Texture>,
@@ -22,9 +20,15 @@ impl Figure {
         }
     }
 
-    pub fn sprite_at(&mut self, x: f64, y: f64) -> Sprite<Texture> {
-        let mut sprite = Sprite::from_texture(self.sprite.clone());
-        sprite.set_position(x, y);
-        return sprite;
+    pub fn sprite(&mut self) -> Sprite<Texture> {
+        Sprite::from_texture(self.sprite.clone())
+    }
+
+    pub fn get_width(&mut self) -> u32 {
+        self.sprite.get_width()
+    }
+
+    pub fn get_height(&mut self) -> u32 {
+        self.sprite.get_height()
     }
 }

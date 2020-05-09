@@ -33,20 +33,26 @@ impl Assets {
 }
 
 pub struct Background {
-    pub levels: [Texture; 4],
-    pub translations: [f64; 4],
+    pub levels: [Texture; 10],
+    pub translations: [f64; 10],
 }
 
 impl Background {
     pub fn new() -> Background {
         Background {
             levels: [
-                Assets::texture("parallax-forest-back-trees.png"),
-                Assets::texture("parallax-forest-middle-trees.png"),
-                Assets::texture("parallax-forest-lights.png"),
-                Assets::texture("parallax-forest-front-trees.png"),
+                Assets::texture("10_Sky.png"),
+                Assets::texture("09_Forest.png"),
+                Assets::texture("08_Forest.png"),
+                Assets::texture("07_Forest.png"),
+                Assets::texture("06_Forest.png"),
+                Assets::texture("05_Particles.png"),
+                Assets::texture("04_Forest.png"),
+                Assets::texture("03_Particles.png"),
+                Assets::texture("02_Bushes.png"),
+                Assets::texture("01_Mist.png"),
             ],
-            translations: [0.0, 0.0, 0.0, 0.0],
+            translations: [0.0; 10],
         }
     }
 
@@ -54,12 +60,16 @@ impl Background {
         self.levels[0].get_width() as f64
     }
 
-    pub fn animate(&mut self) {
-        let speed = 0.03;
-        self.translations[0] -= speed;
-        self.translations[1] -= speed * 2.0;
-        self.translations[3] -= speed * 6.0;
+    pub fn get_height(&mut self) -> f64 {
+        self.levels[0].get_height() as f64
+    }
 
+    pub fn animate(&mut self) {
+        let speed = 0.05;
+        for i in 0..self.levels.len() {
+            let f = (1 + 1 * i) as f64;
+            self.translations[i] -= speed * f;
+        }
         self.reset();
     }
 

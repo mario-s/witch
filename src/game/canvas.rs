@@ -8,13 +8,16 @@ use sprite::*;
 use piston::input::*;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings};
 use graphics::*;
+use graphics::ImageSize;
 
 use game::assets::*;
 use game::controller::Controller;
 use game::sprites::*;
 
 
-const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+const WHITE: [f32; 4] = [1.0; 4];
+const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+const TEXT: &str = "Blair Witch";
 
 pub struct Canvas {
     gl: GlGraphics,
@@ -26,51 +29,60 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
+        let mut witch = Figure::new(WITCH_ICON);
+        let witch_width = witch.get_width();
+        let witch_height = witch.get_height();
+
         let mut bg = Background::new();
-        let controller = Controller::new(bg.get_width());
+        let bg_w = bg.get_width();
+        let bg_h = bg.get_height();
+
+        let controller = Controller::new(witch_width, witch_height, 
+            (bg_w/2.0) - 50.0, bg_h/2.0, 
+            bg_w, bg_h);
+
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
-            witch: Figure::new(WITCH_ICON),
+            witch,
             pause: true,
         }
     }
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
-        let viewport = r_arg.viewport();
-
-        let mut scene = Scene::new();
-        scene.add_child(self.witch.sprite_at(WITCH_X, WITCH_Y));
-
+        let translations = self.background.translations;
         let imgs = &self.background.levels;
+        let width = imgs[0].get_width() as f64;
+        let height = imgs[0].get_height() as f64;
 
         let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
-
-        let horizontal = self.controller.horizontal;
-        let vertical = self.controller.vertical;    
-        let translations = self.background.translations;
+        let controller = &self.controller;
         let pause = self.pause;
         let mut index = 0;
 
-        self.gl.draw(viewport, |c, g| {
+        let mut scene = Scene::new();
+        scene.add_child(self.witch.sprite());
+
+        self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
             let mat = c.transform;
 
             for texture in imgs.into_iter() {
-                let translation = translations[index];
-                let width: f64 = texture.get_width() as f64;
-                image(texture, mat.trans(translation, 0.0), g);
-                image(texture, mat.trans(width + translation, 0.0), g);
+                let t = translations[index];
+                //append two images for a continues scrolling background
+                image(texture, mat.trans(t, 0.0), g);
+                image(texture, mat.trans(t + width, 0.0), g);
                 index += 1;
             }
 
             if pause {
-                text(WHITE, 30, "Blair Witch", &mut cache, mat.trans(100.0, 90.0), g);
+                text(BLACK, 40, TEXT, &mut cache, 
+                    mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
-            scene.draw(mat.trans(horizontal, vertical), g);
+            scene.draw(mat.trans(controller.horizontal, controller.vertical), g);
         });
     }
 

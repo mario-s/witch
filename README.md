@@ -13,8 +13,8 @@ It uses the [piston game engine](https://github.com/PistonDevelopers/piston) and
 
 So far I achieved:
 
-* loading images
-* continue parallax side scrolling of the background
+* loading [images](https://publicdomainvectors.org/en/free-clipart)
+* continue parallax side scrolling of the [background](https://digitalmoons.itch.io/parallax-forest-background)
 * [background music](https://freemusicarchive.org/music/Floating_Spirits/S27-X_II/Floating_Spirits_-_S27-X_II_-_06_Rise_Above)
 * key board control: 
   * P for start/stop
