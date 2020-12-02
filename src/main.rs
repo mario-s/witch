@@ -60,7 +60,7 @@ fn main() {
 
             if let Some(k) = e.button_args() {
                 if let Button::Keyboard(key) = k.button {
-                    canvas.input(key);
+                    canvas.input(key, k.state);
                 }
             }
         }

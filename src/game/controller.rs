@@ -9,7 +9,8 @@ pub struct Controller {
     min_horizontal: f64,
     max_horizontal: f64,
     min_vertical: f64,
-    max_vertical: f64
+    max_vertical: f64,
+    moving: bool
 }
 
 impl Controller {
@@ -24,10 +25,13 @@ impl Controller {
             max_horizontal: width - fig_width as f64 / 2.0,
             min_vertical: fig_height as f64 / 2.0,
             max_vertical: height - fig_height as f64 / 2.0,
+            moving: false
         }
     }
 
-    pub fn do_move(&mut self,  k: Key) {
+    pub fn do_move(&mut self,  k: Key, state: ButtonState) {
+        self.moving = !self.moving;
+        println!("Pressed keyboard key '{:?}'", self.moving);
         match k {
             Key::Up => {
                 self.move_vertical(-WITCH_SPEED)

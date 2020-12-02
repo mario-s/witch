@@ -14,6 +14,8 @@ use game::assets::*;
 use game::controller::Controller;
 use game::sprites::*;
 
+use std::path::PathBuf;
+
 
 const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -24,6 +26,7 @@ pub struct Canvas {
     background: Background,
     controller: Controller,
     witch: Figure,
+    font_path: PathBuf,
     pub pause: bool
 }
 
@@ -41,11 +44,14 @@ impl Canvas {
             (bg_w/2.0) - 50.0, bg_h/2.0, 
             bg_w, bg_h);
 
+        let font_path = Assets::assets("FreeSans.ttf");
+
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
             witch,
+            font_path,
             pause: true,
         }
     }
@@ -57,7 +63,7 @@ impl Canvas {
         let width = imgs[0].get_width() as f64;
         let height = imgs[0].get_height() as f64;
 
-        let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
+        let mut cache = GlyphCache::new(&self.font_path, (), TextureSettings::new()).unwrap();
         let controller = &self.controller;
         let pause = self.pause;
         let mut index = 0;
@@ -90,10 +96,10 @@ impl Canvas {
         self.background.animate();
     }
 
-    pub fn input(&mut self,  k: Key) {
+    pub fn input(&mut self,  k: Key, s: ButtonState) {
         //println!("Pressed keyboard key '{:?}'", b);
         if !self.pause {
-            self.controller.do_move(k);
+            self.controller.do_move(k, s);
         }
     }
 
