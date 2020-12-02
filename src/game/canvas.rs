@@ -90,16 +90,14 @@ impl Canvas {
         self.background.animate();
     }
 
-    pub fn input(&mut self, b: Button) {
+    pub fn input(&mut self,  k: Key) {
         //println!("Pressed keyboard key '{:?}'", b);
         if !self.pause {
-            self.controller.do_move(b);
+            self.controller.do_move(k);
         }
-        
-        self.toggle(b);
     }
 
-    fn toggle(&mut self,  b: Button) {
+    pub fn toggle(&mut self,  b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
         }

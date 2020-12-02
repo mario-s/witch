@@ -1,6 +1,6 @@
 use piston::input::*;
 
-const WITCH_SPEED: f64 = 5.0;
+const WITCH_SPEED: f64 = 15.0;
 
 #[derive(Debug)]
 pub struct Controller {
@@ -27,40 +27,36 @@ impl Controller {
         }
     }
 
-    pub fn do_move(&mut self, b: Button) {
-        match b {
-            Button::Keyboard(Key::Up) => {
-                //up
+    pub fn do_move(&mut self,  k: Key) {
+        match k {
+            Key::Up => {
                 self.move_vertical(-WITCH_SPEED)
             }
-            Button::Keyboard(Key::Down) => {
-                //down
+            Key::Down => {
                 self.move_vertical(WITCH_SPEED)
             }
-            Button::Keyboard(Key::Left) => {
-                //left
+            Key::Left => {
                 self.move_horizontal(-WITCH_SPEED)
             }
-            Button::Keyboard(Key::Right) => {
-                //right
+            Key::Right => {
                 self.move_horizontal(WITCH_SPEED)
             }
-            Button::Keyboard(Key::E) => {
+            Key::E => {
                 //right up
                 self.move_horizontal(WITCH_SPEED);
                 self.move_vertical(-WITCH_SPEED);
             }
-            Button::Keyboard(Key::Q) => {
+            Key::Q => {
                 //left up
                 self.move_horizontal(-WITCH_SPEED);
                 self.move_vertical(-WITCH_SPEED);
             }
-            Button::Keyboard(Key::D) => {
+            Key::D => {
                 //right down
                 self.move_horizontal(WITCH_SPEED);
                 self.move_vertical(WITCH_SPEED);
             }
-            Button::Keyboard(Key::A) => {
+            Key::A => {
                 //left down
                 self.move_horizontal(-WITCH_SPEED);
                 self.move_vertical(WITCH_SPEED);
@@ -95,14 +91,14 @@ mod tests {
     #[test]
     fn controller_move_down() {
         let mut c = setup();
-        c.do_move(Button::Keyboard(Key::Down));
+        c.do_move(Key::Down);
         assert_eq!(c.vertical, WITCH_SPEED);
     }
 
     #[test]
     fn controller_move_right() {
         let mut c = setup();
-        c.do_move(Button::Keyboard(Key::Right));
+        c.do_move(Key::Right);
         assert_eq!(c.horizontal, WITCH_SPEED);
     }
 }

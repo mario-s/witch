@@ -50,12 +50,18 @@ fn main() {
                 canvas.update(u);
             }
     
-            if let Some(p) = e.press_args() {
-                canvas.input(p);
+            if let Some(b) = e.press_args() {
+                canvas.toggle(b);
                 match canvas.pause {
                     false => music::set_volume(music::MIN_VOLUME),
                     _     => music::set_volume(music::MAX_VOLUME),
                 };
+            }
+
+            if let Some(k) = e.button_args() {
+                if let Button::Keyboard(key) = k.button {
+                    canvas.input(key);
+                }
             }
         }
     });
