@@ -105,7 +105,7 @@ impl Canvas {
 
     pub fn input(&mut self, s: ButtonState, k: Key) {
         if !self.pause {
-            self.controller.do_move(s, k);
+            self.controller.key_event(s, k);
         }
     }
 }

@@ -10,6 +10,7 @@ pub struct Controller {
     max_horizontal: f64,
     min_vertical: f64,
     max_vertical: f64,
+    state: ButtonState
 }
 
 impl Controller {
@@ -24,31 +25,44 @@ impl Controller {
             max_horizontal: width - fig_width as f64 / 2.0,
             min_vertical: fig_height as f64 / 2.0,
             max_vertical: height - fig_height as f64 / 2.0,
+            state: ButtonState::Release
         }
     }
 
-    pub fn do_move(&mut self, s: ButtonState, k: Key) {
-        match (s, k) {
-            (ButtonState::Press, Key::Up) => self.move_vertical(-WITCH_SPEED),
-            (ButtonState::Press, Key::Down) => self.move_vertical(WITCH_SPEED),
-            (ButtonState::Press, Key::Left) => self.move_horizontal(-WITCH_SPEED),
-            (ButtonState::Press, Key::Right) => self.move_horizontal(WITCH_SPEED),
-            (ButtonState::Press, Key::E) => {
+    pub fn key_event(&mut self, s: ButtonState, k: Key) {
+        //state changed
+        if self.state != s {
+            //println!("new state: {:?}", s);
+            self.state = s;
+            //a press event
+            if self.state == ButtonState::Press {
+                self.matches(k)
+            }
+        }
+    }
+
+    fn matches(&mut self, k: Key) {
+        match k {
+            Key::Up => self.move_vertical(-WITCH_SPEED),
+            Key::Down => self.move_vertical(WITCH_SPEED),
+            Key::Left => self.move_horizontal(-WITCH_SPEED),
+            Key::Right => self.move_horizontal(WITCH_SPEED),
+            Key::E => {
                 //right up
                 self.move_horizontal(WITCH_SPEED);
                 self.move_vertical(-WITCH_SPEED);
             },
-            (ButtonState::Press, Key::Q) => {
+            Key::Q => {
                 //left up
                 self.move_horizontal(-WITCH_SPEED);
                 self.move_vertical(-WITCH_SPEED);
             },
-            (ButtonState::Press, Key::D) => {
+            Key::D => {
                 //right down
                 self.move_horizontal(WITCH_SPEED);
                 self.move_vertical(WITCH_SPEED);
             },
-            (ButtonState::Press, Key::A) => {
+            Key::A => {
                 //left down
                 self.move_horizontal(-WITCH_SPEED);
                 self.move_vertical(WITCH_SPEED);
@@ -83,14 +97,14 @@ mod tests {
     #[test]
     fn controller_move_down() {
         let mut c = setup();
-        c.do_move(ButtonState::Press, Key::Down);
+        c.key_event(ButtonState::Press, Key::Down);
         assert_eq!(c.vertical, WITCH_SPEED);
     }
 
     #[test]
     fn controller_move_right() {
         let mut c = setup();
-        c.do_move(ButtonState::Press, Key::Right);
+        c.key_event(ButtonState::Press, Key::Right);
         assert_eq!(c.horizontal, WITCH_SPEED);
     }
 }
