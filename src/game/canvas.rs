@@ -64,7 +64,7 @@ impl Canvas {
         let height = imgs[0].get_height() as f64;
 
         let mut cache = GlyphCache::new(&self.font_path, (), TextureSettings::new()).unwrap();
-        let controller = &self.controller;
+        let ctrl = &self.controller;
         let pause = self.pause;
         let mut index = 0;
 
@@ -89,7 +89,7 @@ impl Canvas {
                     mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
-            scene.draw(mat.trans(controller.horizontal, controller.vertical), g);
+            scene.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
         });
     }
 
