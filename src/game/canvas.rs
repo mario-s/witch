@@ -69,7 +69,8 @@ impl Canvas {
         let mut index = 0;
 
         let mut scene = Scene::new();
-        scene.add_child(self.witch.sprite());
+        let player = self.witch.sprite();
+        scene.add_child(player);
 
         self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
@@ -96,16 +97,15 @@ impl Canvas {
         self.background.animate();
     }
 
-    pub fn input(&mut self,  k: Key, s: ButtonState) {
-        //println!("Pressed keyboard key '{:?}'", b);
-        if !self.pause {
-            self.controller.do_move(k, s);
-        }
-    }
-
     pub fn toggle(&mut self,  b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
+        }
+    }
+
+    pub fn input(&mut self, s: ButtonState, k: Key) {
+        if !self.pause {
+            self.controller.do_move(s, k);
         }
     }
 }
