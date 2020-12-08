@@ -93,8 +93,11 @@ impl Canvas {
         });
     }
 
-    pub fn update(&mut self, _args: UpdateArgs) {
+    pub fn update(&mut self, args: UpdateArgs) {
         self.background.animate();
+        if !self.pause {
+            self.controller.time_event(args.dt);
+        }
     }
 
     pub fn toggle(&mut self,  b: Button) {
