@@ -58,12 +58,6 @@ impl Controller {
         }
     }
 
-    pub fn time_event(&mut self, dt: f64) {
-        if self.state == ButtonState::Press {
-            self.update_position(dt * 10.0);
-        }
-    }
-
     fn change_direction(&mut self, k: Key) {
         match k {
             Key::Up => self.direction = Direction::N,
@@ -75,6 +69,12 @@ impl Controller {
             Key::D => self.direction = Direction::SE,
             Key::A => self.direction = Direction::SW,
             _ => self.direction = Direction::None
+        }
+    }
+
+    pub fn time_event(&mut self, dt: f64) {
+        if self.state == ButtonState::Press {
+            self.update_position(dt * 10.0);
         }
     }
 
