@@ -1,6 +1,6 @@
 use piston::input::*;
 
-const VELOCITY: f64 = 15.0;
+const VELOCITY: f64 = 10.0;
 
 #[derive(Debug, PartialEq)]
 enum Direction {
@@ -52,8 +52,9 @@ impl Controller {
             //println!("new state: {:?}", s);
             self.state = s;
             //a press event
-            if self.state == ButtonState::Press {
-                self.change_direction(k);
+            match s {
+                ButtonState::Press => self.change_direction(k),
+                ButtonState::Release => self.dt = 0.0
             }
         }
     }
@@ -74,12 +75,12 @@ impl Controller {
 
     pub fn time_event(&mut self, dt: f64) {
         if self.state == ButtonState::Press {
-            self.update_position(dt * 10.0);
+            self.update_position(dt);
         }
     }
 
     fn update_position(&mut self, dt: f64) {
-        self.dt = dt;
+        self.dt = self.dt + dt;
         match self.direction {
             Direction::N => self.move_vertical(-VELOCITY),
             Direction::S => self.move_vertical(VELOCITY),
@@ -105,21 +106,24 @@ impl Controller {
         }
     }
 
-
-    fn move_horizontal(&mut self, dx: f64) {
-        let next: f64 = self.horizontal + (self.dt * dx);
-        println!("horizontal: {:?}", next);
-        if next >= self.min_horizontal && next <= self.max_horizontal {
+    fn move_horizontal(&mut self, velo: f64) {
+        let next: f64 = self.horizontal + (self.dt * velo);
+        //println!("horizontal: {:?}", next);
+        if self.in_frame(next, self.min_horizontal, self.max_horizontal) {
             self.horizontal = next;
         }
     }
 
-    fn move_vertical(&mut self, dy: f64) {
-        let next: f64 = self.vertical + (self.dt * dy);
-        println!("vertical: {:?}", next);
-        if next >= self.min_vertical && next <= self.max_vertical {
+    fn move_vertical(&mut self, velo: f64) {
+        let next: f64 = self.vertical + (self.dt * velo);
+        //println!("vertical: {:?}", next);
+        if self.in_frame(next, self.min_vertical, self.max_vertical) {
             self.vertical = next;
         } 
+    }
+
+    fn in_frame(&self, next: f64, min: f64, max: f64) -> bool {
+        return next >= min && next <= max;
     }
 }
 
