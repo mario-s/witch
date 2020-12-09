@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
-const TEXT: &str = "Blair Witch";
+const TEXT: &str = "Witch Project";
 
 pub struct Canvas {
     gl: GlGraphics,
