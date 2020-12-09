@@ -1,7 +1,7 @@
 Witch Project
 ===
 
-![flying witch](assets/screen.png "Screenshot") 
+![flying witch](assets/screen.jpg "Screenshot") 
 
 [![Apache 2.0](https://img.shields.io/github/license/nebula-plugins/nebula-project-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
