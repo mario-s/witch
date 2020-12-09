@@ -1,6 +1,19 @@
 use piston::input::*;
 
-const WITCH_SPEED: f64 = 5.0;
+const VELOCITY: f64 = 10.0;
+
+#[derive(Debug, PartialEq)]
+enum Direction {
+    N,
+    NE,
+    E,
+    SE,
+    S,
+    SW,
+    W,
+    NW,
+    None
+}
 
 #[derive(Debug)]
 pub struct Controller {
@@ -9,7 +22,10 @@ pub struct Controller {
     min_horizontal: f64,
     max_horizontal: f64,
     min_vertical: f64,
-    max_vertical: f64
+    max_vertical: f64,
+    state: ButtonState,
+    direction: Direction,
+    dt: f64
 }
 
 impl Controller {
@@ -24,63 +40,90 @@ impl Controller {
             max_horizontal: width - fig_width as f64 / 2.0,
             min_vertical: fig_height as f64 / 2.0,
             max_vertical: height - fig_height as f64 / 2.0,
+            state: ButtonState::Release,
+            direction: Direction::None,
+            dt: 0.0
         }
     }
 
-    pub fn do_move(&mut self, b: Button) {
-        match b {
-            Button::Keyboard(Key::Up) => {
-                //up
-                self.move_vertical(-WITCH_SPEED)
+    pub fn key_event(&mut self, s: ButtonState, k: Key) {
+        //state changed
+        if self.state != s {
+            //println!("new state: {:?}", s);
+            self.state = s;
+            //a press event
+            match s {
+                ButtonState::Press => self.change_direction(k),
+                ButtonState::Release => self.dt = 0.0
             }
-            Button::Keyboard(Key::Down) => {
-                //down
-                self.move_vertical(WITCH_SPEED)
-            }
-            Button::Keyboard(Key::Left) => {
-                //left
-                self.move_horizontal(-WITCH_SPEED)
-            }
-            Button::Keyboard(Key::Right) => {
-                //right
-                self.move_horizontal(WITCH_SPEED)
-            }
-            Button::Keyboard(Key::E) => {
-                //right up
-                self.move_horizontal(WITCH_SPEED);
-                self.move_vertical(-WITCH_SPEED);
-            }
-            Button::Keyboard(Key::Q) => {
-                //left up
-                self.move_horizontal(-WITCH_SPEED);
-                self.move_vertical(-WITCH_SPEED);
-            }
-            Button::Keyboard(Key::D) => {
-                //right down
-                self.move_horizontal(WITCH_SPEED);
-                self.move_vertical(WITCH_SPEED);
-            }
-            Button::Keyboard(Key::A) => {
-                //left down
-                self.move_horizontal(-WITCH_SPEED);
-                self.move_vertical(WITCH_SPEED);
-            }
-            _ => ()
         }
     }
 
-    fn move_horizontal(&mut self, d_x: f64) {
-        let next: f64 = self.horizontal + d_x;
-        if next >= self.min_horizontal && next <= self.max_horizontal {
+    fn change_direction(&mut self, k: Key) {
+        match k {
+            Key::Up => self.direction = Direction::N,
+            Key::Down => self.direction = Direction::S,
+            Key::Left => self.direction = Direction::W,
+            Key::Right => self.direction = Direction::E,
+            Key::E => self.direction = Direction::NE,
+            Key::Q => self.direction = Direction::NW,
+            Key::D => self.direction = Direction::SE,
+            Key::A => self.direction = Direction::SW,
+            _ => self.direction = Direction::None
+        }
+    }
+
+    pub fn time_event(&mut self, dt: f64) {
+        if self.state == ButtonState::Press {
+            self.update_position(dt);
+        }
+    }
+
+    fn update_position(&mut self, dt: f64) {
+        self.dt = self.dt + dt;
+        match self.direction {
+            Direction::N => self.move_vertical(-VELOCITY),
+            Direction::S => self.move_vertical(VELOCITY),
+            Direction::W => self.move_horizontal(-VELOCITY),
+            Direction::E => self.move_horizontal(VELOCITY),
+            Direction::NE => {
+                self.move_horizontal(VELOCITY);
+                self.move_vertical(-VELOCITY);
+            },
+            Direction::NW => {
+                self.move_horizontal(-VELOCITY);
+                self.move_vertical(-VELOCITY);
+            },
+            Direction::SE => {
+                self.move_horizontal(VELOCITY);
+                self.move_vertical(VELOCITY);
+            },
+            Direction::SW => {
+                self.move_horizontal(-VELOCITY);
+                self.move_vertical(VELOCITY);
+            }
+            _ => {}
+        }
+    }
+
+    fn move_horizontal(&mut self, velo: f64) {
+        let next: f64 = self.horizontal + (self.dt * velo);
+        //println!("horizontal: {:?}", next);
+        if self.in_frame(next, self.min_horizontal, self.max_horizontal) {
             self.horizontal = next;
         }
     }
 
-    fn move_vertical(&mut self, d_y: f64) {
-        let next: f64 = self.vertical + d_y;
-        if next >= self.min_vertical && next <= self.max_vertical {
+    fn move_vertical(&mut self, velo: f64) {
+        let next: f64 = self.vertical + (self.dt * velo);
+        //println!("vertical: {:?}", next);
+        if self.in_frame(next, self.min_vertical, self.max_vertical) {
             self.vertical = next;
         } 
+    }
+
+    fn in_frame(&self, next: f64, min: f64, max: f64) -> bool {
+        return next >= min && next <= max;
     }
 }
 
@@ -90,19 +133,41 @@ mod tests {
 
     fn setup() -> Controller {
         Controller::new(2, 2, 0.0, 0.0, 20.0, 20.0)
-    } 
+    }
+
+    #[test]
+    fn controller_move_up() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Up);
+        assert_eq!(c.direction, Direction::N);
+    }
 
     #[test]
     fn controller_move_down() {
         let mut c = setup();
-        c.do_move(Button::Keyboard(Key::Down));
-        assert_eq!(c.vertical, WITCH_SPEED);
+        c.key_event(ButtonState::Press, Key::Down);
+        assert_eq!(c.direction, Direction::S);
     }
 
     #[test]
     fn controller_move_right() {
         let mut c = setup();
-        c.do_move(Button::Keyboard(Key::Right));
-        assert_eq!(c.horizontal, WITCH_SPEED);
+        c.key_event(ButtonState::Press, Key::Right);
+        assert_eq!(c.direction, Direction::E);
+    }
+
+    #[test]
+    fn controller_move_left() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Left);
+        assert_eq!(c.direction, Direction::W);
+    }
+
+    #[test]
+    fn controller_time_event() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Right);
+        c.time_event(0.1);
+        assert!(c.horizontal != 0.0);
     }
 }

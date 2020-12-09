@@ -14,6 +14,8 @@ use game::assets::*;
 use game::controller::Controller;
 use game::sprites::*;
 
+use std::path::PathBuf;
+
 
 const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -24,6 +26,7 @@ pub struct Canvas {
     background: Background,
     controller: Controller,
     witch: Figure,
+    font_path: PathBuf,
     pub pause: bool
 }
 
@@ -41,11 +44,14 @@ impl Canvas {
             (bg_w/2.0) - 50.0, bg_h/2.0, 
             bg_w, bg_h);
 
+        let font_path = Assets::assets("FreeSans.ttf");
+
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
             witch,
+            font_path,
             pause: true,
         }
     }
@@ -57,13 +63,14 @@ impl Canvas {
         let width = imgs[0].get_width() as f64;
         let height = imgs[0].get_height() as f64;
 
-        let mut cache = GlyphCache::new(Assets::assets("FreeSans.ttf"), (), TextureSettings::new()).unwrap();
-        let controller = &self.controller;
+        let mut cache = GlyphCache::new(&self.font_path, (), TextureSettings::new()).unwrap();
+        let ctrl = &self.controller;
         let pause = self.pause;
         let mut index = 0;
 
         let mut scene = Scene::new();
-        scene.add_child(self.witch.sprite());
+        let player = self.witch.sprite();
+        scene.add_child(player);
 
         self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
@@ -82,26 +89,26 @@ impl Canvas {
                     mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
-            scene.draw(mat.trans(controller.horizontal, controller.vertical), g);
+            scene.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
         });
     }
 
-    pub fn update(&mut self, _args: UpdateArgs) {
+    pub fn update(&mut self, args: UpdateArgs) {
         self.background.animate();
-    }
-
-    pub fn input(&mut self, b: Button) {
-        //println!("Pressed keyboard key '{:?}'", b);
         if !self.pause {
-            self.controller.do_move(b);
+            self.controller.time_event(args.dt);
         }
-        
-        self.toggle(b);
     }
 
-    fn toggle(&mut self,  b: Button) {
+    pub fn toggle(&mut self,  b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
+        }
+    }
+
+    pub fn input(&mut self, s: ButtonState, k: Key) {
+        if !self.pause {
+            self.controller.key_event(s, k);
         }
     }
 }
