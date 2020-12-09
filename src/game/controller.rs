@@ -167,7 +167,7 @@ mod tests {
     fn controller_time_event() {
         let mut c = setup();
         c.key_event(ButtonState::Press, Key::Right);
-        c.time_event(0.01);
+        c.time_event(0.1);
         assert!(c.horizontal != 0.0);
     }
 }
