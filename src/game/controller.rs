@@ -2,7 +2,7 @@ use piston::input::*;
 
 const VELOCITY: f64 = 15.0;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Direction {
     N,
     NE,
@@ -108,7 +108,7 @@ impl Controller {
 
     fn move_horizontal(&mut self, dx: f64) {
         let next: f64 = self.horizontal + (self.dt * dx);
-        //println!("horizontal: {:?}", next);
+        println!("horizontal: {:?}", next);
         if next >= self.min_horizontal && next <= self.max_horizontal {
             self.horizontal = next;
         }
@@ -116,7 +116,7 @@ impl Controller {
 
     fn move_vertical(&mut self, dy: f64) {
         let next: f64 = self.vertical + (self.dt * dy);
-        //println!("vertical: {:?}", next);
+        println!("vertical: {:?}", next);
         if next >= self.min_vertical && next <= self.max_vertical {
             self.vertical = next;
         } 
@@ -129,19 +129,41 @@ mod tests {
 
     fn setup() -> Controller {
         Controller::new(2, 2, 0.0, 0.0, 20.0, 20.0)
-    } 
+    }
+
+    #[test]
+    fn controller_move_up() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Up);
+        assert_eq!(c.direction, Direction::N);
+    }
 
     #[test]
     fn controller_move_down() {
         let mut c = setup();
         c.key_event(ButtonState::Press, Key::Down);
-        assert_eq!(c.vertical, VELOCITY);
+        assert_eq!(c.direction, Direction::S);
     }
 
     #[test]
     fn controller_move_right() {
         let mut c = setup();
         c.key_event(ButtonState::Press, Key::Right);
-        assert_eq!(c.horizontal, VELOCITY);
+        assert_eq!(c.direction, Direction::E);
+    }
+
+    #[test]
+    fn controller_move_left() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Left);
+        assert_eq!(c.direction, Direction::W);
+    }
+
+    #[test]
+    fn controller_time_event() {
+        let mut c = setup();
+        c.key_event(ButtonState::Press, Key::Right);
+        c.time_event(0.01);
+        assert!(c.horizontal != 0.0);
     }
 }
