@@ -85,7 +85,7 @@ fn window() -> OpenGlWindow {
 
 //try to build a window
 fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, Box<dyn Error>> {
-    WindowSettings::new("super.mario",[1280, 720])
+    WindowSettings::new("witch project",[1280, 720])
         .resizable(false).exit_on_esc(true).graphics_api(opengl)
         .build()
 }
