@@ -2,7 +2,7 @@ use piston::input::*;
 
 const VELOCITY: f64 = 10.0;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 enum Direction {
     N,
     NE,
