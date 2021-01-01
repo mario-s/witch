@@ -52,9 +52,8 @@ impl Controller {
             //println!("new state: {:?}", s);
             self.state = s;
             //a press event
-            match s {
-                ButtonState::Press => self.change_direction(k),
-                ButtonState::Release => self.dt = 0.0
+            if self.state == ButtonState::Press {
+                self.change_direction(k)
             }
         }
     }
@@ -74,13 +73,22 @@ impl Controller {
     }
 
     pub fn time_event(&mut self, dt: f64) {
-        if self.state == ButtonState::Press {
-            self.update_position(dt);
+        match self.state {
+            ButtonState::Press => {
+                if self.dt < 1.0 {
+                    self.dt = self.dt + dt;
+                }
+            },
+            ButtonState::Release => {
+                if self.dt > 0.0 {
+                    self.dt = self.dt - (dt * 2.0);
+                }
+            }
         }
+        self.update_position();
     }
 
-    fn update_position(&mut self, dt: f64) {
-        self.dt = self.dt + dt;
+    fn update_position(&mut self) {
         match self.direction {
             Direction::N => self.move_vertical(-VELOCITY),
             Direction::S => self.move_vertical(VELOCITY),
