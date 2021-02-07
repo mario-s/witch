@@ -5,7 +5,6 @@ Witch Project
 
 [![Apache 2.0](https://img.shields.io/github/license/nebula-plugins/nebula-project-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-
 Side Scroller
 ---
 
@@ -28,3 +27,12 @@ So far I achieved:
   * E for right up
   * A for left down
   * D for right down
+
+
+Requirements
+---
+Simple DirectMedia Layer:
+* [SDL2](https://www.libsdl.org)
+* [SDL2 Mixer](https://www.libsdl.org/projects/SDL_mixer/)
+
+I recommend to build from source.
