@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use graphics::ImageSize;
 use opengl_graphics::{ TextureSettings, Texture};
 
-
+/// A helper to load images from the assets reources.
 pub struct Assets {}
 
 impl Assets {

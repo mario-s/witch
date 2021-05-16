@@ -21,6 +21,7 @@ const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 const TEXT: &str = "Witch Project";
 
+/// The user interface which renders the game, characters, background, etc.
 pub struct Canvas {
     gl: GlGraphics,
     background: Background,
@@ -40,8 +41,8 @@ impl Canvas {
         let bg_w = bg.get_width();
         let bg_h = bg.get_height();
 
-        let controller = Controller::new(witch_width, witch_height, 
-            (bg_w/2.0) - 50.0, bg_h/2.0, 
+        let controller = Controller::new(witch_width, witch_height,
+            (bg_w/2.0) - 50.0, bg_h/2.0,
             bg_w, bg_h);
 
         let font_path = Assets::assets("FreeSans.ttf");
@@ -85,7 +86,7 @@ impl Canvas {
             }
 
             if pause {
-                text(BLACK, 40, TEXT, &mut cache, 
+                text(BLACK, 40, TEXT, &mut cache,
                     mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 

@@ -15,6 +15,7 @@ enum Direction {
     None
 }
 
+/// This controls the movements of the character
 #[derive(Debug)]
 pub struct Controller {
     pub horizontal: f64,
@@ -127,7 +128,7 @@ impl Controller {
         //println!("vertical: {:?}", next);
         if self.in_frame(next, self.min_vertical, self.max_vertical) {
             self.vertical = next;
-        } 
+        }
     }
 
     fn in_frame(&self, next: f64, min: f64, max: f64) -> bool {

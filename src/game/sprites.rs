@@ -7,7 +7,7 @@ use game::assets::*;
 
 pub const WITCH_ICON: &str = "witch-icon.png";
 
-
+/// A figure is a character on the canvas. This can be either the player or opponent.
 pub struct Figure {
     sprite: Rc<Texture>,
 }
