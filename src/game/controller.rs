@@ -26,7 +26,9 @@ pub struct Controller {
     max_vertical: f64,
     state: ButtonState,
     direction: Direction,
-    dt: f64
+    dt: f64,
+    at_horizontal_edge: bool,
+    at_vertical_edge: bool
 }
 
 impl Controller {
@@ -43,7 +45,9 @@ impl Controller {
             max_vertical: height - fig_height as f64 / 2.0,
             state: ButtonState::Release,
             direction: Direction::None,
-            dt: 0.0
+            dt: 0.0,
+            at_horizontal_edge: false,
+            at_vertical_edge: false
         }
     }
 
@@ -82,11 +86,28 @@ impl Controller {
             },
             ButtonState::Release => {
                 if self.dt > 0.0 {
-                    self.dt = self.dt - (dt * 2.0);
+                    self.slow_down(dt);
                 }
             }
         }
         self.update_position();
+    }
+
+    //decelarate the player
+    fn slow_down(&mut self, dt: f64) {
+        //decelerate when player is not at the edge
+        if !self.at_vertical_edge && !self.at_horizontal_edge {
+            let v = self.dt - (dt * 2.0);
+            //when it is smaller than a minimum we will set it to 0.0
+            if v < 0.01 {
+                self.dt = 0.0;
+            } else {
+                self.dt = v;
+            }
+        } else {
+            //full stop
+            self.dt = 0.0;
+        }
     }
 
     fn update_position(&mut self) {
@@ -120,6 +141,9 @@ impl Controller {
         //println!("horizontal: {:?}", next);
         if self.in_frame(next, self.min_horizontal, self.max_horizontal) {
             self.horizontal = next;
+            self.at_horizontal_edge = false;
+        } else {
+            self.at_horizontal_edge = true;
         }
     }
 
@@ -128,6 +152,9 @@ impl Controller {
         //println!("vertical: {:?}", next);
         if self.in_frame(next, self.min_vertical, self.max_vertical) {
             self.vertical = next;
+            self.at_vertical_edge = false;
+        } else {
+            self.at_vertical_edge = true;
         }
     }
 
