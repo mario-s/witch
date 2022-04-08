@@ -56,11 +56,15 @@ impl Background {
         }
     }
 
-    pub fn get_width(&mut self) -> f64 {
+    pub fn get_dimension(&self) -> [f64; 2] {
+        [self.get_width(), self.get_height()]
+    }
+
+    fn get_width(&self) -> f64 {
         self.levels[0].get_width() as f64
     }
 
-    pub fn get_height(&mut self) -> f64 {
+    fn get_height(&self) -> f64 {
         self.levels[0].get_height() as f64
     }
 

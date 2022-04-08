@@ -36,27 +36,28 @@ pub struct Controller {
 }
 
 impl Controller {
-    pub fn new(player: Player,
-        player_x: f64, player_y: f64,
-        width: f64, height: f64) -> Controller {
+    pub fn new(
+        background_dimension: [f64; 2],
+        player_location: [f64; 2],
+        player: Player) -> Controller {
 
-        let fig_width = player.get_width();
-        let fig_height = player.get_height();
-
-        Controller::create(fig_width, fig_height, player_x, player_y, width, height)
+        let dim = player.get_dimension();
+        Controller::create(dim, player_location, background_dimension)
     }
 
-    fn create(fig_width: u32, fig_height: u32, player_x: f64, player_y: f64,
-        width: f64, height: f64) -> Controller {
+    fn create(
+        player_dimension: [u32; 2],
+        player_location: [f64; 2],
+        background_dimension: [f64; 2]) -> Controller {
         Controller {
-            player_x,
-            player_y,
-            opponent_x: width,
-            opponent_y: height / 2.0,
-            min_horizontal: fig_width as f64 / 2.0,
-            max_horizontal: width - fig_width as f64 / 2.0,
-            min_vertical: fig_height as f64 / 2.0,
-            max_vertical: height - fig_height as f64 / 2.0,
+            player_x: player_location[0],
+            player_y: player_location[1],
+            opponent_x: background_dimension[0],
+            opponent_y: background_dimension[1] / 2.0,
+            min_horizontal: player_dimension[0] as f64 / 2.0,
+            max_horizontal: background_dimension[0] - player_dimension[0] as f64 / 2.0,
+            min_vertical: player_dimension[1] as f64 / 2.0,
+            max_vertical: background_dimension[1] - player_dimension[1] as f64 / 2.0,
             state: ButtonState::Release,
             direction: Direction::None,
             dt: 0.0,
@@ -182,7 +183,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        Controller::create(2, 2, 0.0, 0.0, 20.0, 20.0)
+        Controller::create([2, 2], [0.0, 0.0], [20.0, 20.0])
     }
 
     #[test]

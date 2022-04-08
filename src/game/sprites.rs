@@ -17,12 +17,8 @@ pub struct Opponent {
 pub trait Icon {
     fn image(&self) -> Rc<Texture>;
 
-    fn get_width(&self) -> u32 {
-        self.image().get_width()
-    }
-
-    fn get_height(&self) -> u32 {
-        self.image().get_height()
+    fn get_dimension(&self) -> [u32; 2] {
+        [self.image().get_width(), self.image().get_height()]
     }
 
     fn sprite(&self) -> Sprite<Texture> {

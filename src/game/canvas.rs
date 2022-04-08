@@ -40,12 +40,13 @@ impl Canvas {
         scenes[0].add_child(player.sprite());
         scenes[1].add_child(opponent.sprite());
 
-        let mut bg = Background::new();
-        let bg_w = bg.get_width();
-        let bg_h = bg.get_height();
+        let bg = Background::new();
+        let bg_dim = bg.get_dimension();
 
-        let controller = Controller::new(player,
-            (bg_w/2.0) - 50.0, bg_h/2.0, bg_w, bg_h);
+        let controller = Controller::new(
+            bg_dim,
+            [(bg_dim[0]/2.0) - 50.0, bg_dim[1]/2.0],
+            player);
 
         let font_path = Assets::assets("FreeSans.ttf");
 
