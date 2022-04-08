@@ -14,14 +14,6 @@ pub struct Opponent {
     sprite: Rc<Texture>,
 }
 
-pub trait PlayerFactory {
-    fn new() -> Player;
-}
-
-pub trait OpponentFactory {
-    fn new() -> Opponent;
-}
-
 pub trait Icon {
     fn image(&mut self) -> Rc<Texture>;
 
@@ -38,8 +30,8 @@ pub trait Icon {
     }
 }
 
-impl PlayerFactory for Player {
-    fn new() -> Player {
+impl Player {
+    pub fn new() -> Player {
         Player {
             sprite: Rc::new(Assets::icon("witch-icon.png"))
         }
@@ -53,8 +45,8 @@ impl Icon for Player {
     }
 }
 
-impl OpponentFactory for Opponent {
-    fn new() -> Opponent {
+impl Opponent {
+    pub fn new() -> Opponent {
         Opponent {
             sprite: Rc::new(Assets::icon("ape-44564.png"))
         }
