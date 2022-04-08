@@ -5,15 +5,17 @@ use graphics::ImageSize;
 
 use game::assets::*;
 
-/// A figure is a character on the canvas. This can be either the player or opponent.
+/// The user's player.
 pub struct Player {
     sprite: Rc<Texture>,
 }
 
+/// The opponent of the player.
 pub struct Opponent {
     sprite: Rc<Texture>,
 }
 
+/// This trait offer methods to access th used image.
 pub trait Icon {
     fn image(&self) -> Rc<Texture>;
 
