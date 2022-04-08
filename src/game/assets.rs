@@ -1,10 +1,9 @@
 extern crate find_folder;
 extern crate opengl_graphics;
 
-
-use std::path::PathBuf;
 use graphics::ImageSize;
-use opengl_graphics::{ TextureSettings, Texture};
+use opengl_graphics::{Texture, TextureSettings};
+use std::path::PathBuf;
 
 /// A helper to load images from the assets reources.
 pub struct Assets {}
@@ -12,7 +11,8 @@ pub struct Assets {}
 impl Assets {
     pub fn assets(path: &str) -> PathBuf {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets").unwrap();
+            .for_folder("assets")
+            .unwrap();
         assets.join(path)
     }
 
@@ -29,7 +29,6 @@ impl Assets {
     fn from_path(path: &str) -> Texture {
         Texture::from_path(Assets::assets(path), &TextureSettings::new()).unwrap()
     }
-
 }
 
 pub struct Background {

@@ -1,7 +1,7 @@
-use std::rc::Rc;
-use sprite::*;
-use opengl_graphics::Texture;
 use graphics::ImageSize;
+use opengl_graphics::Texture;
+use sprite::*;
+use std::rc::Rc;
 
 use game::assets::*;
 
@@ -31,13 +31,12 @@ pub trait Icon {
 impl Player {
     pub fn new() -> Player {
         Player {
-            sprite: Rc::new(Assets::icon("witch-icon.png"))
+            sprite: Rc::new(Assets::icon("witch-icon.png")),
         }
     }
 }
 
 impl Icon for Player {
-
     fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }
@@ -46,13 +45,12 @@ impl Icon for Player {
 impl Opponent {
     pub fn new() -> Opponent {
         Opponent {
-            sprite: Rc::new(Assets::icon("ape-44564.png"))
+            sprite: Rc::new(Assets::icon("ape-44564.png")),
         }
     }
 }
 
 impl Icon for Opponent {
-
     fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }

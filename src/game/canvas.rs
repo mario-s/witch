@@ -1,21 +1,20 @@
+extern crate ai_behavior;
 extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
-extern crate ai_behavior;
 
-use sprite::*;
-use piston::input::*;
-use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings};
-use graphics::*;
 use graphics::ImageSize;
+use graphics::*;
+use opengl_graphics::{GlGraphics, GlyphCache, OpenGL, TextureSettings};
+use piston::input::*;
+use sprite::*;
 
 use game::assets::*;
 use game::controller::Controller;
 use game::sprites::*;
 
 use std::path::PathBuf;
-
 
 const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -28,7 +27,7 @@ pub struct Canvas {
     controller: Controller,
     font_path: PathBuf,
     scenes: [Scene<opengl_graphics::Texture>; 2],
-    pub pause: bool
+    pub pause: bool,
 }
 
 impl Canvas {
@@ -43,10 +42,8 @@ impl Canvas {
         let bg = Background::new();
         let bg_dim = bg.get_dimension();
 
-        let controller = Controller::new(
-            bg_dim,
-            [(bg_dim[0]/2.0) - 50.0, bg_dim[1]/2.0],
-            player);
+        let controller =
+            Controller::new(bg_dim, [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], player);
 
         let font_path = Assets::assets("FreeSans.ttf");
 
@@ -88,8 +85,14 @@ impl Canvas {
             }
 
             if pause {
-                text(BLACK, 40, TEXT, &mut cache,
-                    mat.trans(width/2.0 + 30.0, height/2.0), g);
+                text(
+                    BLACK,
+                    40,
+                    TEXT,
+                    &mut cache,
+                    mat.trans(width / 2.0 + 30.0, height / 2.0),
+                    g,
+                );
             }
 
             if !pause {
@@ -107,7 +110,7 @@ impl Canvas {
         }
     }
 
-    pub fn toggle(&mut self,  b: Button) {
+    pub fn toggle(&mut self, b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
         }

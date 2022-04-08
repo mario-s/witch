@@ -1,19 +1,19 @@
 extern crate find_folder;
 extern crate glutin_window;
 extern crate graphics;
+extern crate music;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
-extern crate music;
 
-use std::error::Error;
-use std::str::FromStr;
-use piston::window::*;
-use piston::event_loop::*;
-use piston::input::*;
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::OpenGL;
+use piston::event_loop::*;
+use piston::input::*;
 use piston::window::BuildFromWindowSettings;
+use piston::window::*;
+use std::error::Error;
+use std::str::FromStr;
 
 mod game;
 use game::Canvas;
@@ -30,7 +30,7 @@ struct OpenGlWindow {
 }
 
 fn main() {
-    music::start::<Music, Music ,_>(32, || {
+    music::start::<Music, Music, _>(32, || {
         music::bind_music_file(Music::Synth, "./assets/sound/rise.wav");
         music::set_volume(music::MAX_VOLUME);
 
@@ -45,16 +45,16 @@ fn main() {
             if let Some(r) = e.render_args() {
                 canvas.render(r);
             }
-    
+
             if let Some(u) = e.update_args() {
                 canvas.update(u);
             }
-    
+
             if let Some(b) = e.press_args() {
                 canvas.toggle(b);
                 match canvas.pause {
                     false => music::set_volume(music::MIN_VOLUME),
-                    _     => music::set_volume(music::MAX_VOLUME),
+                    _ => music::set_volume(music::MAX_VOLUME),
                 };
             }
 
@@ -76,16 +76,18 @@ fn window() -> OpenGlWindow {
         if result.is_ok() {
             return OpenGlWindow {
                 opengl: opengl,
-                window: result.unwrap(), 
-            }
+                window: result.unwrap(),
+            };
         }
     }
-    panic!("No supported OpenGl version found! {:?}", versions);    
+    panic!("No supported OpenGl version found! {:?}", versions);
 }
 
 //try to build a window
 fn build<W: BuildFromWindowSettings>(opengl: OpenGL) -> Result<W, Box<dyn Error>> {
-    WindowSettings::new("witch project",[1280, 720])
-        .resizable(false).exit_on_esc(true).graphics_api(opengl)
+    WindowSettings::new("witch project", [1280, 720])
+        .resizable(false)
+        .exit_on_esc(true)
+        .graphics_api(opengl)
         .build()
 }

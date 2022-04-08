@@ -14,7 +14,7 @@ enum Direction {
     SW,
     W,
     NW,
-    None
+    None,
 }
 
 /// This controls the movements of the character
@@ -32,15 +32,15 @@ pub struct Controller {
     direction: Direction,
     dt: f64,
     at_horizontal_edge: bool,
-    at_vertical_edge: bool
+    at_vertical_edge: bool,
 }
 
 impl Controller {
     pub fn new(
         background_dimension: [f64; 2],
         player_location: [f64; 2],
-        player: Player) -> Controller {
-
+        player: Player,
+    ) -> Controller {
         let dim = player.get_dimension();
         Controller::create(dim, player_location, background_dimension)
     }
@@ -48,7 +48,8 @@ impl Controller {
     fn create(
         player_dimension: [u32; 2],
         player_location: [f64; 2],
-        background_dimension: [f64; 2]) -> Controller {
+        background_dimension: [f64; 2],
+    ) -> Controller {
         Controller {
             player_x: player_location[0],
             player_y: player_location[1],
@@ -62,7 +63,7 @@ impl Controller {
             direction: Direction::None,
             dt: 0.0,
             at_horizontal_edge: false,
-            at_vertical_edge: false
+            at_vertical_edge: false,
         }
     }
 
@@ -88,7 +89,7 @@ impl Controller {
             Key::Q => self.direction = Direction::NW,
             Key::D => self.direction = Direction::SE,
             Key::A => self.direction = Direction::SW,
-            _ => self.direction = Direction::None
+            _ => self.direction = Direction::None,
         }
     }
 
@@ -98,7 +99,7 @@ impl Controller {
                 if self.dt < 1.0 {
                     self.dt = self.dt + dt;
                 }
-            },
+            }
             ButtonState::Release => {
                 if self.dt > 0.0 {
                     self.slow_down(dt);
@@ -134,15 +135,15 @@ impl Controller {
             Direction::NE => {
                 self.move_horizontal(VELOCITY);
                 self.move_vertical(-VELOCITY);
-            },
+            }
             Direction::NW => {
                 self.move_horizontal(-VELOCITY);
                 self.move_vertical(-VELOCITY);
-            },
+            }
             Direction::SE => {
                 self.move_horizontal(VELOCITY);
                 self.move_vertical(VELOCITY);
-            },
+            }
             Direction::SW => {
                 self.move_horizontal(-VELOCITY);
                 self.move_vertical(VELOCITY);
