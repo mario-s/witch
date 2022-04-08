@@ -33,7 +33,7 @@ impl Assets {
 
 pub struct Background {
     pub levels: [Texture; 10],
-    pub translations: [f64; 10],
+    pub x_shifts: [f64; 10],
 }
 
 impl Background {
@@ -51,7 +51,7 @@ impl Background {
                 Assets::texture("02_Bushes.png"),
                 Assets::texture("01_Mist.png"),
             ],
-            translations: [0.0; 10],
+            x_shifts: [0.0; 10],
         }
     }
 
@@ -67,11 +67,12 @@ impl Background {
         self.levels[0].get_height() as f64
     }
 
-    pub fn animate(&mut self) {
+    ///This method will update the x value of the image location.
+    pub fn update(&mut self) {
         let speed = 0.05;
         for i in 0..self.levels.len() {
             let f = (1 + i) as f64;
-            self.translations[i] -= speed * f;
+            self.x_shifts[i] -= speed * f;
         }
         self.reset();
     }
@@ -79,8 +80,8 @@ impl Background {
     fn reset(&mut self) {
         let min: f64 = -1.0 * self.get_width();
         for i in 0..self.levels.len() {
-            if self.translations[i] < min {
-                self.translations[i] = 0.0;
+            if self.x_shifts[i] < min {
+                self.x_shifts[i] = 0.0;
             }
         }
     }

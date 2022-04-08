@@ -59,7 +59,7 @@ impl Canvas {
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
-        let translations = self.background.translations;
+        let x_shifts = self.background.x_shifts;
         let imgs = &self.background.levels;
         let width = imgs[0].get_width() as f64;
         let height = imgs[0].get_height() as f64;
@@ -77,10 +77,9 @@ impl Canvas {
             let mat = c.transform;
 
             for texture in imgs.iter() {
-                let t = translations[index];
                 //append two images for a continues scrolling background
-                image(texture, mat.trans(t, 0.0), g);
-                image(texture, mat.trans(t + width, 0.0), g);
+                image(texture, mat.trans(x_shifts[index], 0.0), g);
+                image(texture, mat.trans(x_shifts[index] + width, 0.0), g);
                 index += 1;
             }
 
@@ -104,7 +103,7 @@ impl Canvas {
     }
 
     pub fn update(&mut self, args: UpdateArgs) {
-        self.background.animate();
+        self.background.update();
         if !self.pause {
             self.controller.time_event(args.dt);
         }
