@@ -94,7 +94,7 @@ impl Canvas {
             }
 
             if !pause {
-                opponent.draw(mat.trans(width, height), g);
+                opponent.draw(mat.trans(ctrl.opponent_x, ctrl.opponent_y), g);
             }
 
             player.draw(mat.trans(ctrl.player_x, ctrl.player_y), g);

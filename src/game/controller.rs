@@ -20,6 +20,8 @@ enum Direction {
 pub struct Controller {
     pub player_x: f64,
     pub player_y: f64,
+    pub opponent_x: f64,
+    pub opponent_y: f64,
     min_horizontal: f64,
     max_horizontal: f64,
     min_vertical: f64,
@@ -39,6 +41,8 @@ impl Controller {
         Controller {
             player_x,
             player_y,
+            opponent_x: width,
+            opponent_y: height / 2.0,
             min_horizontal: fig_width as f64 / 2.0,
             max_horizontal: width - fig_width as f64 / 2.0,
             min_vertical: fig_height as f64 / 2.0,
