@@ -26,33 +26,37 @@ pub struct Canvas {
     gl: GlGraphics,
     background: Background,
     controller: Controller,
-    witch: Figure,
     font_path: PathBuf,
+    scenes: [Scene<opengl_graphics::Texture>; 2],
     pub pause: bool
 }
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
-        let mut witch = Figure::new(WITCH_ICON);
-        let witch_width = witch.get_width();
-        let witch_height = witch.get_height();
+        let mut player = Player::new();
+        let mut opponent = Opponent::new();
+        let player_width = player.get_width();
+        let player_height = player.get_height();
 
         let mut bg = Background::new();
         let bg_w = bg.get_width();
         let bg_h = bg.get_height();
 
-        let controller = Controller::new(witch_width, witch_height,
+        let controller = Controller::new(player_width, player_height,
             (bg_w/2.0) - 50.0, bg_h/2.0,
             bg_w, bg_h);
 
         let font_path = Assets::assets("FreeSans.ttf");
+        let mut scenes = [Scene::new(), Scene::new()];
+        scenes[0].add_child(player.sprite());
+        scenes[1].add_child(opponent.sprite());
 
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller: controller,
-            witch,
             font_path,
+            scenes: scenes,
             pause: true,
         }
     }
@@ -69,9 +73,8 @@ impl Canvas {
         let pause = self.pause;
         let mut index = 0;
 
-        let mut scene = Scene::new();
-        let player = self.witch.sprite();
-        scene.add_child(player);
+        let player = &self.scenes[0];
+        let opponent = &self.scenes[1];
 
         self.gl.draw(r_arg.viewport(), |c, g| {
             clear(WHITE, g);
@@ -90,7 +93,11 @@ impl Canvas {
                     mat.trans(width/2.0 + 30.0, height/2.0), g);
             }
 
-            scene.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
+            if !pause {
+                opponent.draw(mat.trans(width, height), g);
+            }
+
+            player.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
         });
     }
 

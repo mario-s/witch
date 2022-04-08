@@ -5,30 +5,65 @@ use graphics::ImageSize;
 
 use game::assets::*;
 
-pub const WITCH_ICON: &str = "witch-icon.png";
-
 /// A figure is a character on the canvas. This can be either the player or opponent.
-pub struct Figure {
+pub struct Player {
     sprite: Rc<Texture>,
 }
 
-impl Figure {
+pub struct Opponent {
+    sprite: Rc<Texture>,
+}
 
-    pub fn new(icon: &str) -> Figure {
-        Figure {
-            sprite: Rc::new(Assets::icon(icon))
+pub trait PlayerFactory {
+    fn new() -> Player;
+}
+
+pub trait OpponentFactory {
+    fn new() -> Opponent;
+}
+
+pub trait Icon {
+    fn image(&mut self) -> Rc<Texture>;
+
+    fn get_width(&mut self) -> u32 {
+        self.image().get_width()
+    }
+
+    fn get_height(&mut self) -> u32 {
+        self.image().get_height()
+    }
+
+    fn sprite(&mut self) -> Sprite<Texture> {
+        Sprite::from_texture(self.image())
+    }
+}
+
+impl PlayerFactory for Player {
+    fn new() -> Player {
+        Player {
+            sprite: Rc::new(Assets::icon("witch-icon.png"))
         }
     }
+}
 
-    pub fn sprite(&mut self) -> Sprite<Texture> {
-        Sprite::from_texture(self.sprite.clone())
+impl Icon for Player {
+
+    fn image(&mut self) -> Rc<Texture> {
+        self.sprite.clone()
     }
+}
 
-    pub fn get_width(&mut self) -> u32 {
-        self.sprite.get_width()
+impl OpponentFactory for Opponent {
+    fn new() -> Opponent {
+        Opponent {
+            sprite: Rc::new(Assets::icon("ape-44564.png"))
+        }
     }
+}
 
-    pub fn get_height(&mut self) -> u32 {
-        self.sprite.get_height()
+impl Icon for Opponent {
+
+    fn image(&mut self) -> Rc<Texture> {
+        self.sprite.clone()
     }
 }
