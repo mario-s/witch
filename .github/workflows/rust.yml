@@ -13,6 +13,8 @@ jobs:
       run: |
         brew install sdl2
         brew install sdl2_mixer
+    - name: Clippy
+      run: cargo clippy
     - name: Build
       run: cargo build --verbose
     - name: Run tests
