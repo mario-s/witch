@@ -50,9 +50,9 @@ impl Canvas {
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
-            controller: controller,
+            controller,
             font_path,
-            scenes: scenes,
+            scenes,
             pause: true,
         }
     }
@@ -76,7 +76,7 @@ impl Canvas {
             clear(WHITE, g);
             let mat = c.transform;
 
-            for texture in imgs.into_iter() {
+            for texture in imgs.iter() {
                 let t = translations[index];
                 //append two images for a continues scrolling background
                 image(texture, mat.trans(t, 0.0), g);

@@ -97,7 +97,7 @@ impl Controller {
         match self.state {
             ButtonState::Press => {
                 if self.dt < 1.0 {
-                    self.dt = self.dt + dt;
+                    self.dt += dt;
                 }
             }
             ButtonState::Release => {
@@ -175,7 +175,7 @@ impl Controller {
     }
 
     fn in_frame(&self, next: f64, min: f64, max: f64) -> bool {
-        return next >= min && next <= max;
+        next >= min && next <= max
     }
 }
 

@@ -73,11 +73,8 @@ fn window() -> OpenGlWindow {
         let opengl = OpenGL::from_str(v).unwrap();
         let result: Result<Window, Box<dyn Error>> = build(opengl);
         //if the result is ok, a supported opengl version is available
-        if result.is_ok() {
-            return OpenGlWindow {
-                opengl: opengl,
-                window: result.unwrap(),
-            };
+        if let Ok(window) = result {
+            return OpenGlWindow {opengl, window};
         }
     }
     panic!("No supported OpenGl version found! {:?}", versions);

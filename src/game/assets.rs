@@ -70,7 +70,7 @@ impl Background {
     pub fn animate(&mut self) {
         let speed = 0.05;
         for i in 0..self.levels.len() {
-            let f = (1 + 1 * i) as f64;
+            let f = (1 + i) as f64;
             self.translations[i] -= speed * f;
         }
         self.reset();
