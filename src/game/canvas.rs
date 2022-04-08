@@ -97,7 +97,7 @@ impl Canvas {
                 opponent.draw(mat.trans(width, height), g);
             }
 
-            player.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
+            player.draw(mat.trans(ctrl.player_x, ctrl.player_y), g);
         });
     }
 

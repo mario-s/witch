@@ -18,8 +18,8 @@ enum Direction {
 /// This controls the movements of the character
 #[derive(Debug)]
 pub struct Controller {
-    pub horizontal: f64,
-    pub vertical: f64,
+    pub player_x: f64,
+    pub player_y: f64,
     min_horizontal: f64,
     max_horizontal: f64,
     min_vertical: f64,
@@ -33,12 +33,12 @@ pub struct Controller {
 
 impl Controller {
     pub fn new(fig_width: u32, fig_height: u32,
-        horizontal: f64, vertical: f64,
+        player_x: f64, player_y: f64,
         width: f64, height: f64) -> Controller {
 
         Controller {
-            horizontal,
-            vertical,
+            player_x,
+            player_y,
             min_horizontal: fig_width as f64 / 2.0,
             max_horizontal: width - fig_width as f64 / 2.0,
             min_vertical: fig_height as f64 / 2.0,
@@ -137,10 +137,10 @@ impl Controller {
     }
 
     fn move_horizontal(&mut self, velo: f64) {
-        let next: f64 = self.horizontal + (self.dt * velo);
-        //println!("horizontal: {:?}", next);
+        let next: f64 = self.player_x + (self.dt * velo);
+        //println!("player_x: {:?}", next);
         if self.in_frame(next, self.min_horizontal, self.max_horizontal) {
-            self.horizontal = next;
+            self.player_x = next;
             self.at_horizontal_edge = false;
         } else {
             self.at_horizontal_edge = true;
@@ -148,10 +148,10 @@ impl Controller {
     }
 
     fn move_vertical(&mut self, velo: f64) {
-        let next: f64 = self.vertical + (self.dt * velo);
-        //println!("vertical: {:?}", next);
+        let next: f64 = self.player_y + (self.dt * velo);
+        //println!("player_y: {:?}", next);
         if self.in_frame(next, self.min_vertical, self.max_vertical) {
-            self.vertical = next;
+            self.player_y = next;
             self.at_vertical_edge = false;
         } else {
             self.at_vertical_edge = true;
@@ -204,6 +204,6 @@ mod tests {
         let mut c = setup();
         c.key_event(ButtonState::Press, Key::Right);
         c.time_event(0.1);
-        assert!(c.horizontal != 0.0);
+        assert!(c.player_x != 0.0);
     }
 }
