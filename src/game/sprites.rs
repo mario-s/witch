@@ -15,17 +15,17 @@ pub struct Opponent {
 }
 
 pub trait Icon {
-    fn image(&mut self) -> Rc<Texture>;
+    fn image(&self) -> Rc<Texture>;
 
-    fn get_width(&mut self) -> u32 {
+    fn get_width(&self) -> u32 {
         self.image().get_width()
     }
 
-    fn get_height(&mut self) -> u32 {
+    fn get_height(&self) -> u32 {
         self.image().get_height()
     }
 
-    fn sprite(&mut self) -> Sprite<Texture> {
+    fn sprite(&self) -> Sprite<Texture> {
         Sprite::from_texture(self.image())
     }
 }
@@ -40,7 +40,7 @@ impl Player {
 
 impl Icon for Player {
 
-    fn image(&mut self) -> Rc<Texture> {
+    fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }
 }
@@ -55,7 +55,7 @@ impl Opponent {
 
 impl Icon for Opponent {
 
-    fn image(&mut self) -> Rc<Texture> {
+    fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }
 }

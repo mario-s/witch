@@ -33,23 +33,21 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
-        let mut player = Player::new();
-        let mut opponent = Opponent::new();
-        let player_width = player.get_width();
-        let player_height = player.get_height();
+        let player = Player::new();
+        let opponent = Opponent::new();
+
+        let mut scenes = [Scene::new(), Scene::new()];
+        scenes[0].add_child(player.sprite());
+        scenes[1].add_child(opponent.sprite());
 
         let mut bg = Background::new();
         let bg_w = bg.get_width();
         let bg_h = bg.get_height();
 
-        let controller = Controller::new(player_width, player_height,
-            (bg_w/2.0) - 50.0, bg_h/2.0,
-            bg_w, bg_h);
+        let controller = Controller::new(player,
+            (bg_w/2.0) - 50.0, bg_h/2.0, bg_w, bg_h);
 
         let font_path = Assets::assets("FreeSans.ttf");
-        let mut scenes = [Scene::new(), Scene::new()];
-        scenes[0].add_child(player.sprite());
-        scenes[1].add_child(opponent.sprite());
 
         Canvas {
             gl: GlGraphics::new(opengl),
