@@ -32,8 +32,8 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
-        let player = Player::new();
-        let opponent = Opponent::new();
+        let player = Player::new(WITCH);
+        let opponent = Player::new(APE);
         let scenes = [player.as_scene(), opponent.as_scene()];
 
         let bg = Background::new();

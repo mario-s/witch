@@ -5,13 +5,11 @@ use std::rc::Rc;
 
 use game::assets::*;
 
-/// The user's player.
-pub struct Player {
-    sprite: Rc<Texture>,
-}
+pub const WITCH: &str = "witch-icon.png";
+pub const APE: &str = "ape-44564.png";
 
-/// The opponent of the player.
-pub struct Opponent {
+/// One player.
+pub struct Player {
     sprite: Rc<Texture>,
 }
 
@@ -35,28 +33,14 @@ pub trait Figure {
 }
 
 impl Player {
-    pub fn new() -> Player {
+    pub fn new(image_name: &str) -> Player {
         Player {
-            sprite: Rc::new(Assets::icon("witch-icon.png")),
+            sprite: Rc::new(Assets::icon(image_name)),
         }
     }
 }
 
 impl Figure for Player {
-    fn image(&self) -> Rc<Texture> {
-        self.sprite.clone()
-    }
-}
-
-impl Opponent {
-    pub fn new() -> Opponent {
-        Opponent {
-            sprite: Rc::new(Assets::icon("ape-44564.png")),
-        }
-    }
-}
-
-impl Figure for Opponent {
     fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }
