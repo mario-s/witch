@@ -12,7 +12,7 @@ use sprite::*;
 use game::assets::Assets;
 use game::background::Background;
 use game::controller::Controller;
-use game::sprites::*;
+use game::figures::*;
 
 use std::path::PathBuf;
 
@@ -34,10 +34,7 @@ impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
         let player = Player::new();
         let opponent = Opponent::new();
-
-        let mut scenes = [Scene::new(), Scene::new()];
-        scenes[0].add_child(player.sprite());
-        scenes[1].add_child(opponent.sprite());
+        let scenes = [player.as_scene(), opponent.as_scene()];
 
         let bg = Background::new();
         let bg_dim = bg.get_dimension();
@@ -45,13 +42,11 @@ impl Canvas {
         let controller =
             Controller::new(bg_dim, [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], player);
 
-        let font_path = Assets::assets("FreeSans.ttf");
-
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller,
-            font_path,
+            font_path: Assets::assets("FreeSans.ttf"),
             scenes,
             pause: true,
         }

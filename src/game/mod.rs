@@ -4,4 +4,4 @@ mod assets;
 mod background;
 mod canvas;
 mod controller;
-mod sprites;
+mod figures;

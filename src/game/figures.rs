@@ -15,12 +15,18 @@ pub struct Opponent {
     sprite: Rc<Texture>,
 }
 
-/// This trait offer methods to access the used image.
-pub trait Icon {
+/// This trait is for the capabilities of an payer.
+pub trait Figure {
     fn image(&self) -> Rc<Texture>;
 
     fn get_dimension(&self) -> [u32; 2] {
         [self.image().get_width(), self.image().get_height()]
+    }
+
+    fn as_scene(&self) -> Scene<opengl_graphics::Texture> {
+        let mut scene = Scene::new();
+        scene.add_child(self.sprite());
+        scene
     }
 
     fn sprite(&self) -> Sprite<Texture> {
@@ -36,7 +42,7 @@ impl Player {
     }
 }
 
-impl Icon for Player {
+impl Figure for Player {
     fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }
@@ -50,7 +56,7 @@ impl Opponent {
     }
 }
 
-impl Icon for Opponent {
+impl Figure for Opponent {
     fn image(&self) -> Rc<Texture> {
         self.sprite.clone()
     }

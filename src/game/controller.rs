@@ -1,6 +1,6 @@
 use piston::input::*;
 
-use game::sprites::*;
+use game::figures::*;
 
 const VELOCITY: f64 = 10.0;
 
