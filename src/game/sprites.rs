@@ -15,7 +15,7 @@ pub struct Opponent {
     sprite: Rc<Texture>,
 }
 
-/// This trait offer methods to access th used image.
+/// This trait offer methods to access the used image.
 pub trait Icon {
     fn image(&self) -> Rc<Texture>;
 

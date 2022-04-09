@@ -4,13 +4,13 @@ extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
 
-use graphics::ImageSize;
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, OpenGL, TextureSettings};
 use piston::input::*;
 use sprite::*;
 
-use game::assets::*;
+use game::assets::Assets;
+use game::background::Background;
 use game::controller::Controller;
 use game::sprites::*;
 
