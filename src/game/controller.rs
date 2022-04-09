@@ -20,10 +20,8 @@ enum Direction {
 /// This controls the movements of the character
 #[derive(Debug)]
 pub struct Controller {
-    pub player_x: f64,
-    pub player_y: f64,
-    pub opponent_x: f64,
-    pub opponent_y: f64,
+    pub player_location: [f64; 2],
+    pub opponent_location: [f64; 2],
     min_horizontal: f64,
     max_horizontal: f64,
     min_vertical: f64,
@@ -50,11 +48,10 @@ impl Controller {
         player_location: [f64; 2],
         background_dimension: [f64; 2],
     ) -> Controller {
+        let opponent_location = [background_dimension[0], background_dimension[1] / 2.0];
         Controller {
-            player_x: player_location[0],
-            player_y: player_location[1],
-            opponent_x: background_dimension[0],
-            opponent_y: background_dimension[1] / 2.0,
+            player_location,
+            opponent_location,
             min_horizontal: player_dimension[0] as f64 / 2.0,
             max_horizontal: background_dimension[0] - player_dimension[0] as f64 / 2.0,
             min_vertical: player_dimension[1] as f64 / 2.0,
@@ -153,10 +150,10 @@ impl Controller {
     }
 
     fn move_horizontal(&mut self, velo: f64) {
-        let next: f64 = self.player_x + (self.dt * velo);
+        let next: f64 = self.player_location[0] + (self.dt * velo);
         //println!("player_x: {:?}", next);
         if self.in_frame(next, self.min_horizontal, self.max_horizontal) {
-            self.player_x = next;
+            self.player_location[0] = next;
             self.at_horizontal_edge = false;
         } else {
             self.at_horizontal_edge = true;
@@ -164,10 +161,10 @@ impl Controller {
     }
 
     fn move_vertical(&mut self, velo: f64) {
-        let next: f64 = self.player_y + (self.dt * velo);
+        let next: f64 = self.player_location[1] + (self.dt * velo);
         //println!("player_y: {:?}", next);
         if self.in_frame(next, self.min_vertical, self.max_vertical) {
-            self.player_y = next;
+            self.player_location[1] = next;
             self.at_vertical_edge = false;
         } else {
             self.at_vertical_edge = true;
@@ -220,6 +217,6 @@ mod tests {
         let mut c = setup();
         c.key_event(ButtonState::Press, Key::Right);
         c.time_event(0.1);
-        assert!(c.player_x != 0.0);
+        assert!(c.player_location[0] != 0.0);
     }
 }

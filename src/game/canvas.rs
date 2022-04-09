@@ -90,10 +90,12 @@ impl Canvas {
             }
 
             if !pause {
-                opponent.draw(mat.trans(ctrl.opponent_x, ctrl.opponent_y), g);
+                let loc = ctrl.opponent_location;
+                opponent.draw(mat.trans(loc[0], loc[1]), g);
             }
 
-            player.draw(mat.trans(ctrl.player_x, ctrl.player_y), g);
+            let loc = ctrl.player_location;
+            player.draw(mat.trans(loc[0], loc[1]), g);
         });
     }
 
