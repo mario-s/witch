@@ -7,7 +7,6 @@ extern crate sprite;
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, OpenGL, TextureSettings};
 use piston::input::*;
-use sprite::*;
 
 use game::assets::Assets;
 use game::background::Background;
@@ -26,7 +25,7 @@ pub struct Canvas {
     background: Background,
     controller: Controller,
     font_path: PathBuf,
-    scenes: [Scene<opengl_graphics::Texture>; 2],
+    figures: [Player; 2],
     pub pause: bool,
 }
 
@@ -34,20 +33,20 @@ impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
         let player = Player::new(WITCH);
         let opponent = Player::new(APE);
-        let scenes = [player.as_scene(), opponent.as_scene()];
 
+        let player_dim = player.get_dimension();
         let bg = Background::new();
         let bg_dim = bg.get_dimension();
 
         let controller =
-            Controller::new(bg_dim, [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], player);
+            Controller::new(player_dim, [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], bg_dim);
 
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
             controller,
             font_path: Assets::assets("FreeSans.ttf"),
-            scenes,
+            figures: [player, opponent],
             pause: true,
         }
     }
@@ -64,17 +63,17 @@ impl Canvas {
         let pause = self.pause;
         let mut index = 0;
 
-        let player = &self.scenes[0];
-        let opponent = &self.scenes[1];
+        let player = &self.figures[0];
+        let opponent = &self.figures[1];
 
-        self.gl.draw(r_arg.viewport(), |c, g| {
-            clear(WHITE, g);
-            let mat = c.transform;
+        self.gl.draw(r_arg.viewport(), |context, graphics| {
+            clear(WHITE, graphics);
+            let mat = context.transform;
 
             for texture in imgs.iter() {
                 //append two images for a continues scrolling background
-                image(texture, mat.trans(x_shifts[index], 0.0), g);
-                image(texture, mat.trans(x_shifts[index] + width, 0.0), g);
+                image(texture, mat.trans(x_shifts[index], 0.0), graphics);
+                image(texture, mat.trans(x_shifts[index] + width, 0.0), graphics);
                 index += 1;
             }
 
@@ -85,17 +84,15 @@ impl Canvas {
                     TEXT,
                     &mut cache,
                     mat.trans(width / 2.0 + 30.0, height / 2.0),
-                    g,
+                    graphics,
                 );
             }
 
             if !pause {
-                let loc = ctrl.opponent_location;
-                opponent.draw(mat.trans(loc[0], loc[1]), g);
+                opponent.draw_at(ctrl.opponent_location, mat, graphics);
             }
 
-            let loc = ctrl.player_location;
-            player.draw(mat.trans(loc[0], loc[1]), g);
+            player.draw_at(ctrl.player_location, mat, graphics);
         });
     }
 

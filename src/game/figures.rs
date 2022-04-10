@@ -1,5 +1,5 @@
-use graphics::ImageSize;
-use opengl_graphics::Texture;
+use graphics::{ImageSize, Transformed};
+use opengl_graphics::{GlGraphics, Texture};
 use sprite::*;
 use std::rc::Rc;
 
@@ -10,38 +10,39 @@ pub const APE: &str = "ape-44564.png";
 
 /// One player.
 pub struct Player {
-    sprite: Rc<Texture>,
+    texture: Rc<Texture>,
+    sprite: Sprite<Texture>
 }
 
-/// This trait is for the capabilities of an payer.
+/// This trait is for the capabilities of an player.
 pub trait Figure {
-    fn image(&self) -> Rc<Texture>;
 
     fn get_dimension(&self) -> [u32; 2] {
         [self.image().get_width(), self.image().get_height()]
     }
 
-    fn as_scene(&self) -> Scene<opengl_graphics::Texture> {
-        let mut scene = Scene::new();
-        scene.add_child(self.sprite());
-        scene
-    }
+    fn image(&self) -> Rc<Texture>;
 
-    fn sprite(&self) -> Sprite<Texture> {
-        Sprite::from_texture(self.image())
-    }
+    fn draw_at(&self, loc: [f64; 2], mat: [[f64; 3]; 2], g: &mut GlGraphics) -> ();
 }
 
 impl Player {
     pub fn new(image_name: &str) -> Player {
+        let texture = Rc::new(Assets::icon(image_name));
+        let sprite = Sprite::from_texture(texture.clone());
         Player {
-            sprite: Rc::new(Assets::icon(image_name)),
+            texture,
+            sprite
         }
     }
 }
 
 impl Figure for Player {
     fn image(&self) -> Rc<Texture> {
-        self.sprite.clone()
+        self.texture.clone()
+    }
+
+    fn draw_at(&self, loc: [f64; 2], mat: [[f64; 3]; 2], g: &mut GlGraphics) -> () {
+        self.sprite.draw(mat.trans(loc[0], loc[1]), g);
     }
 }

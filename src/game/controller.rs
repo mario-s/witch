@@ -1,7 +1,5 @@
 use piston::input::*;
 
-use game::figures::*;
-
 const VELOCITY: f64 = 10.0;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -34,16 +32,8 @@ pub struct Controller {
 }
 
 impl Controller {
-    pub fn new(
-        background_dimension: [f64; 2],
-        player_location: [f64; 2],
-        player: Player,
-    ) -> Controller {
-        let dim = player.get_dimension();
-        Controller::create(dim, player_location, background_dimension)
-    }
 
-    fn create(
+    pub fn new(
         player_dimension: [u32; 2],
         player_location: [f64; 2],
         background_dimension: [f64; 2],
@@ -181,7 +171,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        Controller::create([2, 2], [0.0, 0.0], [20.0, 20.0])
+        Controller::new([2, 2], [0.0, 0.0], [20.0, 20.0])
     }
 
     #[test]
