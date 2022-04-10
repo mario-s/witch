@@ -39,10 +39,10 @@ impl Controller {
         player_location: [f64; 2],
         background_dimension: [f64; 2],
     ) -> Controller {
-        let opponent_location = Controller::init_opponent_location(opponent_dimension, background_dimension);
+        let loc = Controller::init_opponent_location(opponent_dimension, background_dimension);
         Controller {
             player_location,
-            opponent_location,
+            opponent_location: loc,
             opponent_dimension,
             background_dimension,
             left_top: [player_dimension[0] as f64 / 2.0, player_dimension[1] as f64 / 2.0],
@@ -178,7 +178,8 @@ impl Controller {
 
     fn update_opponent_position(&mut self, dt: f64) {
         let x = self.opponent_location[0] - (20.0 * dt);
-        if x >= self.background_dimension[0] {
+        let min = self.background_dimension[0] - (self.opponent_dimension[0] / 3) as f64;
+        if x >=  min {
             self.opponent_location[0] = x;
         }
     }
