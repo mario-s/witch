@@ -35,11 +35,13 @@ impl Canvas {
         let opponent = Player::new(APE);
 
         let player_dim = player.get_dimension();
+        let opponent_dim = opponent.get_dimension();
         let bg = Background::new();
         let bg_dim = bg.get_dimension();
 
         let controller =
-            Controller::new(player_dim, [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], bg_dim);
+            Controller::new(player_dim, opponent_dim,
+                [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], bg_dim);
 
         Canvas {
             gl: GlGraphics::new(opengl),
@@ -106,6 +108,10 @@ impl Canvas {
     pub fn toggle(&mut self, b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
+
+            if self.pause {
+                self.controller.reset_opponent();
+            }
         }
     }
 

@@ -23,7 +23,7 @@ pub trait Figure {
 
     fn image(&self) -> Rc<Texture>;
 
-    fn draw_at(&self, loc: [f64; 2], mat: [[f64; 3]; 2], g: &mut GlGraphics) -> ();
+    fn draw_at(&self, loc: [f64; 2], mat: [[f64; 3]; 2], g: &mut GlGraphics);
 }
 
 impl Player {
