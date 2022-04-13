@@ -251,13 +251,18 @@ mod tests {
     }
 
     #[test]
-    fn update_opponet_position() {
+    fn update_opponent_position() {
         let mut c = setup();
-        c.player_location[1] = 10.0;
+        c.player_location[1] = 5.0;
         c.update_opponent_position(0.008);
-        assert!(c.opponent_location[0] != 0.0);
         assert!(c.opponent_location[0] >= 20.0);
-        assert!(c.opponent_location[1] != 0.0);
-        assert!(c.opponent_location[1] < 20.0);
+        assert!(c.opponent_location[1] == 9.84);
+    }
+
+    #[test]
+    fn no_vertical_opponent_movement() {
+        let c = setup();
+        assert!(c.opponent_location[0] >= 20.0);
+        assert!(c.opponent_location[1] == 10.0);
     }
 }
