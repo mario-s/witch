@@ -253,8 +253,11 @@ mod tests {
     #[test]
     fn update_opponet_position() {
         let mut c = setup();
-        c.move_opponent_in(0.008);
+        c.player_location[1] = 10.0;
+        c.update_opponent_position(0.008);
         assert!(c.opponent_location[0] != 0.0);
         assert!(c.opponent_location[0] >= 20.0);
+        assert!(c.opponent_location[1] != 0.0);
+        assert!(c.opponent_location[1] < 20.0);
     }
 }
