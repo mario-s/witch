@@ -1,6 +1,8 @@
 use piston::input::*;
 
-const VELOCITY: f64 = 10.0;
+//velocity of a figure
+const OPPONENT_VELO: f64 = 20.0;
+const PLAYER_VELO: f64 = 10.0;
 
 #[derive(Debug, PartialEq, Eq)]
 enum Direction {
@@ -126,25 +128,25 @@ impl Controller {
 
     fn update_player_position(&mut self) {
         match self.direction {
-            Direction::N => self.move_vertical(-VELOCITY),
-            Direction::S => self.move_vertical(VELOCITY),
-            Direction::W => self.move_horizontal(-VELOCITY),
-            Direction::E => self.move_horizontal(VELOCITY),
+            Direction::N => self.move_vertical(-PLAYER_VELO),
+            Direction::S => self.move_vertical(PLAYER_VELO),
+            Direction::W => self.move_horizontal(-PLAYER_VELO),
+            Direction::E => self.move_horizontal(PLAYER_VELO),
             Direction::NE => {
-                self.move_horizontal(VELOCITY);
-                self.move_vertical(-VELOCITY);
+                self.move_horizontal(PLAYER_VELO);
+                self.move_vertical(-PLAYER_VELO);
             }
             Direction::NW => {
-                self.move_horizontal(-VELOCITY);
-                self.move_vertical(-VELOCITY);
+                self.move_horizontal(-PLAYER_VELO);
+                self.move_vertical(-PLAYER_VELO);
             }
             Direction::SE => {
-                self.move_horizontal(VELOCITY);
-                self.move_vertical(VELOCITY);
+                self.move_horizontal(PLAYER_VELO);
+                self.move_vertical(PLAYER_VELO);
             }
             Direction::SW => {
-                self.move_horizontal(-VELOCITY);
-                self.move_vertical(VELOCITY);
+                self.move_horizontal(-PLAYER_VELO);
+                self.move_vertical(PLAYER_VELO);
             }
             _ => {}
         }
@@ -177,10 +179,29 @@ impl Controller {
     }
 
     fn update_opponent_position(&mut self, dt: f64) {
-        let x = self.opponent_location[0] - (20.0 * dt);
+        self.move_opponent_in(dt);
+        //a possible vertical move only when no b utton is pressed
+        if self.state != ButtonState::Press {
+            self.followed_by_opponent(dt);
+        }
+    }
+
+    fn move_opponent_in(&mut self, dt: f64) {
+        let x = self.opponent_location[0] - (OPPONENT_VELO * dt);
         let min = self.background_dimension[0] - (self.opponent_dimension[0] / 3) as f64;
         if x >=  min {
             self.opponent_location[0] = x;
+        }
+    }
+
+    fn followed_by_opponent(&mut self, dt: f64) {
+        let opp_y = self.opponent_location[1];
+        let diff = self.player_location[1] - opp_y;
+        //check diff and move into the appropriate direction
+        if diff > 0.0 {
+            self.opponent_location[1] = opp_y + (OPPONENT_VELO * dt);
+        } else if diff < 0.0 {
+            self.opponent_location[1] = opp_y - (OPPONENT_VELO * dt);
         }
     }
 }
@@ -232,7 +253,7 @@ mod tests {
     #[test]
     fn update_opponet_position() {
         let mut c = setup();
-        c.update_opponent_position(0.008);
+        c.move_opponent_in(0.008);
         assert!(c.opponent_location[0] != 0.0);
         assert!(c.opponent_location[0] >= 20.0);
     }
