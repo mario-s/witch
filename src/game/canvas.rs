@@ -39,9 +39,7 @@ impl Canvas {
         let bg = Background::new();
         let bg_dim = bg.get_dimension();
 
-        let controller =
-            Controller::new(player_dim, opponent_dim,
-                [(bg_dim[0] / 2.0) - 50.0, bg_dim[1] / 2.0], bg_dim);
+        let controller = Controller::new(player_dim, opponent_dim, bg_dim);
 
         Canvas {
             gl: GlGraphics::new(opengl),

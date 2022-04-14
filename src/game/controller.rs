@@ -38,12 +38,11 @@ impl Controller {
     pub fn new(
         player_dimension: [u32; 2],
         opponent_dimension: [u32; 2],
-        player_location: [f64; 2],
         background_dimension: [f64; 2],
     ) -> Controller {
         let loc = Controller::init_opponent_location(opponent_dimension, background_dimension);
         Controller {
-            player_location,
+            player_location: [(background_dimension[0] / 2.0) - 50.0, background_dimension[1] / 2.0],
             opponent_location: loc,
             opponent_dimension,
             background_dimension,
@@ -211,7 +210,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Controller {
-        Controller::new([2, 2], [4, 4], [0.0, 0.0], [20.0, 20.0])
+        Controller::new([2, 2], [4, 4], [20.0, 20.0])
     }
 
     #[test]
