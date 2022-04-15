@@ -1,7 +1,7 @@
 use piston::input::*;
 
 //velocity of a figure
-const OPPONENT_VELO: f64 = 20.0;
+const OPPONENT_VELO: f64 = 30.0;
 const PLAYER_VELO: f64 = 10.0;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -179,10 +179,7 @@ impl Controller {
 
     fn update_opponent_position(&mut self, dt: f64) {
         self.move_opponent_in(dt);
-        //a possible vertical move only when no b utton is pressed
-        if self.state != ButtonState::Press {
-            self.followed_by_opponent(dt);
-        }
+        self.followed_by_opponent(dt);
     }
 
     fn move_opponent_in(&mut self, dt: f64) {
@@ -255,7 +252,8 @@ mod tests {
         c.player_location[1] = 5.0;
         c.update_opponent_position(0.008);
         assert!(c.opponent_location[0] >= 20.0);
-        assert!(c.opponent_location[1] == 9.84);
+        assert!(c.opponent_location[1] < 10.0);
+        assert!(c.opponent_location[1] > 9.0);
     }
 
     #[test]
