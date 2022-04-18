@@ -1,21 +1,19 @@
+extern crate ai_behavior;
 extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 extern crate sprite;
-extern crate ai_behavior;
 
-use sprite::*;
-use piston::input::*;
-use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings};
 use graphics::*;
-use graphics::ImageSize;
+use opengl_graphics::{GlGraphics, GlyphCache, OpenGL, TextureSettings};
+use piston::input::*;
 
-use game::assets::*;
+use game::assets::Assets;
+use game::background::Background;
 use game::controller::Controller;
-use game::sprites::*;
+use game::figures::*;
 
 use std::path::PathBuf;
-
 
 const WHITE: [f32; 4] = [1.0; 4];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -26,40 +24,36 @@ pub struct Canvas {
     gl: GlGraphics,
     background: Background,
     controller: Controller,
-    witch: Figure,
     font_path: PathBuf,
-    pub pause: bool
+    figures: [Player; 2],
+    pub pause: bool,
 }
 
 impl Canvas {
     pub fn new(opengl: OpenGL) -> Canvas {
-        let mut witch = Figure::new(WITCH_ICON);
-        let witch_width = witch.get_width();
-        let witch_height = witch.get_height();
+        let player = Player::new(WITCH);
+        let opponent = Player::new(APE);
 
-        let mut bg = Background::new();
-        let bg_w = bg.get_width();
-        let bg_h = bg.get_height();
+        let player_dim = player.get_dimension();
+        let opponent_dim = opponent.get_dimension();
+        let bg = Background::new();
+        let bg_dim = bg.get_dimension();
 
-        let controller = Controller::new(witch_width, witch_height,
-            (bg_w/2.0) - 50.0, bg_h/2.0,
-            bg_w, bg_h);
-
-        let font_path = Assets::assets("FreeSans.ttf");
+        let controller = Controller::new(player_dim, opponent_dim, bg_dim);
 
         Canvas {
             gl: GlGraphics::new(opengl),
             background: bg,
-            controller: controller,
-            witch,
-            font_path,
+            controller,
+            font_path: Assets::assets("FreeSans.ttf"),
+            figures: [player, opponent],
             pause: true,
         }
     }
 
     #[allow(unused_must_use)]
     pub fn render(&mut self, r_arg: RenderArgs) {
-        let translations = self.background.translations;
+        let x_shifts = self.background.x_shifts;
         let imgs = &self.background.levels;
         let width = imgs[0].get_width() as f64;
         let height = imgs[0].get_height() as f64;
@@ -69,41 +63,53 @@ impl Canvas {
         let pause = self.pause;
         let mut index = 0;
 
-        let mut scene = Scene::new();
-        let player = self.witch.sprite();
-        scene.add_child(player);
+        let player = &self.figures[0];
+        let opponent = &self.figures[1];
 
-        self.gl.draw(r_arg.viewport(), |c, g| {
-            clear(WHITE, g);
-            let mat = c.transform;
+        self.gl.draw(r_arg.viewport(), |context, graphics| {
+            clear(WHITE, graphics);
+            let mat = context.transform;
 
-            for texture in imgs.into_iter() {
-                let t = translations[index];
+            for texture in imgs.iter() {
                 //append two images for a continues scrolling background
-                image(texture, mat.trans(t, 0.0), g);
-                image(texture, mat.trans(t + width, 0.0), g);
+                image(texture, mat.trans(x_shifts[index], 0.0), graphics);
+                image(texture, mat.trans(x_shifts[index] + width, 0.0), graphics);
                 index += 1;
             }
 
             if pause {
-                text(BLACK, 40, TEXT, &mut cache,
-                    mat.trans(width/2.0 + 30.0, height/2.0), g);
+                text(
+                    BLACK,
+                    40,
+                    TEXT,
+                    &mut cache,
+                    mat.trans(width / 2.0 + 30.0, height / 2.0),
+                    graphics,
+                );
             }
 
-            scene.draw(mat.trans(ctrl.horizontal, ctrl.vertical), g);
+            if !pause {
+                opponent.draw_at(ctrl.opponent_location, mat, graphics);
+            }
+
+            player.draw_at(ctrl.player_location, mat, graphics);
         });
     }
 
     pub fn update(&mut self, args: UpdateArgs) {
-        self.background.animate();
+        self.background.update();
         if !self.pause {
             self.controller.time_event(args.dt);
         }
     }
 
-    pub fn toggle(&mut self,  b: Button) {
+    pub fn toggle(&mut self, b: Button) {
         if b == Button::Keyboard(Key::P) {
             self.pause = !self.pause;
+
+            if self.pause {
+                self.controller.reset_opponent();
+            }
         }
     }
 
